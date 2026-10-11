@@ -2959,6 +2959,8 @@ Click "Execute Pipeline" to inspect real-time state traversal, retrieved vector 
     };
 
     let currentScenarioKey = 'zepto';
+    let pipelineInterval = null;
+    let typingTimeout = null;
 
     const scenarioButtons = document.querySelectorAll('.scenario-btn');
     const promptTextEl = document.getElementById('sandboxPromptText');
@@ -2970,6 +2972,10 @@ Click "Execute Pipeline" to inspect real-time state traversal, retrieved vector 
     const streamStatusEl = document.getElementById('streamStatus');
 
     function loadScenario(key) {
+      if (pipelineInterval) clearInterval(pipelineInterval);
+      if (typingTimeout) clearTimeout(typingTimeout);
+      if (runPipelineBtn) runPipelineBtn.disabled = false;
+
       currentScenarioKey = key;
       const config = scenarioConfigs[key];
       if (!config) return;
@@ -3010,12 +3016,22 @@ Click "Execute Pipeline" to inspect real-time state traversal, retrieved vector 
         const config = scenarioConfigs[currentScenarioKey];
         if (!config) return;
 
+        if (pipelineInterval) clearInterval(pipelineInterval);
+        if (typingTimeout) clearTimeout(typingTimeout);
+        runPipelineBtn.disabled = true;
+
         playSound('click');
         streamStatusEl.textContent = "RUNNING...";
         outputStreamEl.textContent = "";
 
+        // Reset previous node states
+        for (let i = 1; i <= 4; i++) {
+          const nodeCard = document.getElementById(`node-${i}`);
+          if (nodeCard) nodeCard.classList.remove('active-node', 'completed-node');
+        }
+
         let nodeIndex = 1;
-        const interval = setInterval(() => {
+        pipelineInterval = setInterval(() => {
           if (nodeIndex <= 4) {
             playSound('tick');
             const prevNode = document.getElementById(`node-${nodeIndex - 1}`);
@@ -3027,14 +3043,15 @@ Click "Execute Pipeline" to inspect real-time state traversal, retrieved vector 
             if (currNode) currNode.classList.add('active-node');
             nodeIndex++;
           } else {
-            clearInterval(interval);
+            clearInterval(pipelineInterval);
+            pipelineInterval = null;
             const lastNode = document.getElementById(`node-4`);
             if (lastNode) {
               lastNode.classList.remove('active-node');
               lastNode.classList.add('completed-node');
             }
 
-            // Stream text with typewriter effect
+            // Stream text with smooth typewriter effect
             latencyEl.textContent = config.latency;
             confidenceEl.textContent = config.confidence;
             streamStatusEl.textContent = "COMPLETED";
@@ -3042,12 +3059,16 @@ Click "Execute Pipeline" to inspect real-time state traversal, retrieved vector 
 
             let charIdx = 0;
             const fullText = config.streamText;
+            const chunkSize = 2; // Stream 2 characters per tick for smooth readability
             function typeOut() {
               if (charIdx < fullText.length) {
-                outputStreamEl.textContent += fullText.charAt(charIdx);
-                charIdx += 3; // Fast stream
+                outputStreamEl.textContent += fullText.slice(charIdx, charIdx + chunkSize);
+                charIdx += chunkSize;
                 outputStreamEl.scrollTop = outputStreamEl.scrollHeight;
-                setTimeout(typeOut, 15);
+                typingTimeout = setTimeout(typeOut, 12);
+              } else {
+                typingTimeout = null;
+                runPipelineBtn.disabled = false;
               }
             }
             typeOut();
