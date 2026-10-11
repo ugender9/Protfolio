@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Podila Ugender | AI & Machine Learning Engineer Portfolio</title>
+  <meta name="description" content="Portfolio of Podila Ugender — AI & ML Engineer specializing in Agentic AI, LangGraph, RAG architectures, Vision Transformers (DINOv2), and Production AI systems.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Three.js CDN for Interactive 3D WebGL Graphics -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    :root {
+      --bg: #050811;
+      --bg-alt: #0a0f1d;
+      --bg-surface: rgba(13, 20, 36, 0.75);
+      --card-bg: rgba(15, 23, 42, 0.72);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover-border: rgba(99, 102, 241, 0.65);
+      --ink: #f8fafc;
+      --ink-dim: #cbd5e1;
+      --mute: #94a3b8;
+      --line: #1e293b;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.4);
+      --accent-cyan: #06b6d4;
+      --accent-cyan-glow: rgba(6, 182, 212, 0.35);
+      --accent-emerald: #10b981;
+      --accent-emerald-glow: rgba(16, 185, 129, 0.35);
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+      --gradient-brand: linear-gradient(135deg, #6366f1 0%, #06b6d4 50%, #3b82f6 100%);
+      --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.15) 100%);
+      --glow: 0 0 35px rgba(99, 102, 241, 0.3);
+      --glass-blur: blur(20px);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-alt: #f1f5f9;
+      --bg-surface: rgba(255, 255, 255, 0.85);
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --card-border: rgba(226, 232, 240, 0.95);
+      --card-hover-border: rgba(99, 102, 241, 0.6);
+      --ink: #0f172a;
+      --ink-dim: #334155;
+      --mute: #64748b;
+      --line: #e2e8f0;
+      --accent: #4f46e5;
+      --accent-glow: rgba(79, 70, 229, 0.2);
+      --accent-cyan: #0891b2;
+      --accent-cyan-glow: rgba(8, 145, 178, 0.2);
+      --accent-emerald: #059669;
+      --accent-emerald-glow: rgba(5, 150, 105, 0.2);
+      --accent-amber: #d97706;
+      --accent-purple: #9333ea;
+      --gradient-brand: linear-gradient(135deg, #4f46e5 0%, #0891b2 50%, #2563eb 100%);
+      --gradient-glow: linear-gradient(135deg, rgba(79, 70, 229, 0.12) 0%, rgba(8, 145, 178, 0.08) 100%);
+      --glow: 0 4px 25px rgba(79, 70, 229, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      font-size: 16px;
+      overflow-x: hidden;
+      position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Top Reading Progress Bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: var(--gradient-brand);
+      z-index: 9999;
+      box-shadow: 0 0 10px var(--accent-cyan);
+      transition: width 0.1s ease-out;
+    }
+
+    /* Custom Futuristic Glow Cursor (Desktop) */
+    .custom-cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      background: #06b6d4;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s, transform 0.05s linear;
+      box-shadow: 0 0 12px #06b6d4, 0 0 20px #6366f1;
+    }
+    .custom-cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid rgba(6, 182, 212, 0.45);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .custom-cursor-ring.active {
+      width: 58px;
+      height: 58px;
+      border-color: rgba(99, 102, 241, 0.8);
+      background: rgba(99, 102, 241, 0.12);
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .custom-cursor-dot, .custom-cursor-ring { display: none !important; }
+    }
+
+    /* Fullscreen Three.js 3D Background Canvas */
+    #webgl-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.9;
+      transition: opacity 0.5s ease;
+    }
+    [data-theme="light"] #webgl-canvas {
+      opacity: 0.42;
+    }
+
+    /* Subtle Cyber Grid Texture */
+    .cyber-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+    }
+
+    /* Content Wrapper */
+    .content-layer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(5, 8, 17, 0.82);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 0;
+      transition: all 0.25s ease;
+    }
+    [data-theme="light"] nav {
+      background: rgba(248, 250, 252, 0.88);
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-badge {
+      background: var(--gradient-brand);
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--mute);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.2s ease, transform 0.15s ease;
+      position: relative;
+    }
+    .nav-links a:hover {
+      color: var(--ink);
+      transform: translateY(-1px);
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient-brand);
+      transition: width 0.2s ease;
+      border-radius: 2px;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .icon-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .cmd-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent-cyan);
+      border-color: rgba(6, 182, 212, 0.35);
+      background: rgba(6, 182, 212, 0.08);
+    }
+    .cmd-btn kbd {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .btn-resume {
+      background: var(--gradient-brand);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 2px 14px rgba(99, 102, 241, 0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-resume:hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.55);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 64px 0 44px;
+      position: relative;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 44px;
+      align-items: center;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--accent-emerald);
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 18px var(--accent-emerald-glow);
+    }
+    .pulse-dot {
+      width: 9px;
+      height: 9px;
+      background: var(--accent-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-emerald);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+    .hero h1 {
+      font-size: clamp(38px, 5.2vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1.8px;
+      margin-bottom: 18px;
+    }
+    .gradient-text {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      text-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+    }
+    .cursor-blink {
+      font-weight: 300;
+      color: var(--accent-cyan);
+      animation: blink 1s step-end infinite;
+      display: inline-block;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .hero p.lead {
+      font-size: clamp(16.5px, 1.8vw, 19.5px);
+      color: var(--mute);
+      margin: 20px 0 30px;
+      line-height: 1.65;
+    }
+    .hero p.lead strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-main {
+      padding: 13px 24px;
+      border-radius: 11px;
+      font-weight: 700;
+      font-size: 14.5px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.22s ease;
+    }
+    .btn-primary {
+      background: var(--gradient-brand);
+      color: #fff;
+      box-shadow: 0 4px 22px rgba(99, 102, 241, 0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+    }
+    .btn-outline {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      backdrop-filter: blur(10px);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.2);
+    }
+    .btn-cyan {
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      color: var(--accent-cyan);
+    }
+    .btn-cyan:hover {
+      background: var(--accent-cyan);
+      color: #050811;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px var(--accent-cyan-glow);
+    }
+
+    /* 3D Interactive Core Widget */
+    .hero-3d-box {
+      position: relative;
+      height: 420px;
+      background: radial-gradient(circle at center, rgba(99, 102, 241, 0.16) 0%, rgba(6, 182, 212, 0.08) 50%, rgba(5, 8, 17, 0.6) 80%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 26px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(99, 102, 241, 0.1);
+    }
+    #hero-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      z-index: 1;
+    }
+    #hero-canvas:active {
+      cursor: grabbing;
+    }
+    .hero-3d-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+    .hero-3d-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(5, 8, 17, 0.6);
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+    .hud-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--mute);
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .hero-3d-controls {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: auto;
+      gap: 10px;
+      background: rgba(5, 8, 17, 0.65);
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+    .model-controls-group {
+      display: flex;
+      gap: 8px;
+    }
+    .model-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+    .model-switch-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Live Pipeline Strip */
+    .pipe-container {
+      margin-top: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .pipe-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent-cyan);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pipe-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .pipe-step {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+      position: relative;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .pipe-step:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+    }
+    .pipe-step .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .pipe-step strong {
+      display: block;
+      font-size: 16px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .pipe-step span {
+      font-size: 13px;
+      color: var(--mute);
+    }
+
+    /* Key Metrics */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin: 44px 0 20px;
+    }
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px 20px;
+      backdrop-filter: blur(14px);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.3);
+    }
+    .metric-num {
+      font-size: clamp(36px, 4vw, 48px);
+      font-weight: 900;
+      letter-spacing: -1.2px;
+      line-height: 1;
+      margin-bottom: 8px;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .metric-label {
+      font-size: 13.5px;
+      color: var(--mute);
+      font-weight: 500;
+    }
+
+    /* Section Headers */
+    section {
+      padding: 70px 0;
+      border-top: 1px solid var(--line);
+      position: relative;
+    }
+    .section-head {
+      margin-bottom: 38px;
+    }
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-head h2 {
+      font-size: clamp(30px, 4.2vw, 44px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--ink);
+    }
+    .section-head p {
+      color: var(--mute);
+      font-size: 16.5px;
+      margin-top: 8px;
+      max-width: 65ch;
+    }
+
+    /* ========================================================
+       LIVE INTERACTIVE AI AGENT SANDBOX (SHOWSTOPPER COMPONENT)
+       ======================================================== */
+    .sandbox-container {
+      background: var(--card-bg);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 24px;
+      padding: 30px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.15);
+      margin-top: 20px;
+    }
+    .sandbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+    }
+    .sandbox-title-wrap h3 {
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sandbox-title-wrap p {
+      color: var(--mute);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    .scenario-picker {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .scenario-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .scenario-btn:hover, .scenario-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    /* Graph Visualizer Nodes */
+    .graph-nodes-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .graph-node {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .graph-node.active-node {
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.12);
+      box-shadow: 0 0 20px var(--accent-cyan-glow);
+      transform: translateY(-3px);
+    }
+    .graph-node.completed-node {
+      border-color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .node-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--mute);
+      margin-bottom: 6px;
+    }
+    .node-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .node-status {
+      font-size: 12px;
+      color: var(--mute);
+      margin-top: 4px;
+    }
+
+    /* Sandbox Interactive Console */
+    .sandbox-console {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .console-input-pane, .console-output-pane {
+      background: rgba(5, 8, 17, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 260px;
+    }
+    [data-theme="light"] .console-input-pane, [data-theme="light"] .console-output-pane {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .pane-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .input-prompt-text {
+      font-size: 14px;
+      color: #e2e8f0;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      margin-bottom: 16px;
+    }
+    .sandbox-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+    .telemetry-row {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .telemetry-val {
+      color: var(--accent-emerald);
+      font-weight: 700;
+    }
+    .output-stream {
+      font-size: 13.5px;
+      color: #38bdf8;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 180px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ========================================================
+       BENCHMARK VISUALIZER
+       ======================================================== */
+    .benchmark-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .bench-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 26px;
+      backdrop-filter: blur(14px);
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .bench-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--card-hover-border);
+    }
+    .bench-card h4 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bench-card p.sub {
+      font-size: 13.5px;
+      color: var(--mute);
+      margin-bottom: 20px;
+    }
+    .bar-group {
+      margin-bottom: 14px;
+    }
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .bar-track {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bar-fill-cyan { background: linear-gradient(90deg, #06b6d4, #3b82f6); box-shadow: 0 0 10px rgba(6, 182, 212, 0.5); }
+    .bar-fill-indigo { background: linear-gradient(90deg, #6366f1, #a855f7); box-shadow: 0 0 10px rgba(99, 102, 241, 0.5); }
+    .bar-fill-emerald { background: linear-gradient(90deg, #10b981, #06b6d4); box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+
+    /* Filter Controls */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      color: var(--mute);
+      padding: 9px 20px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+    }
+
+    /* 3D Tilt Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 28px;
+      perspective: 1200px;
+    }
+
+    /* Card with 3D Tilt and Specular Reflection */
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+    .project-card:hover {
+      border-color: var(--card-hover-border);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 0 25px rgba(99, 102, 241, 0.2);
+    }
+
+    .card-glare {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle 350px at 50% 50%, rgba(255, 255, 255, 0.12), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+      border-radius: inherit;
+    }
+    .project-card:hover .card-glare {
+      opacity: 1;
+    }
+
+    .layer-3d-mid { transform: translateZ(20px); }
+    .layer-3d-pop { transform: translateZ(32px); }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge-live {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-repo {
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+    }
+    .project-card h3 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+    .project-card p.desc {
+      color: var(--mute);
+      font-size: 14.5px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .project-highlights {
+      list-style-type: none;
+      margin-bottom: 22px;
+    }
+    .project-highlights li {
+      font-size: 13.5px;
+      color: var(--ink-dim);
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .project-highlights li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .tech-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      color: var(--mute);
+      transition: all 0.2s;
+    }
+    .tech-pill:hover {
+      color: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+    }
+    .project-links-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .link-btn {
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+      padding: 8px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      transition: all 0.2s;
+    }
+    .link-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .link-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+    }
+    .link-btn.primary:hover {
+      background: #4f46e5;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45);
+    }
+    .btn-inspect {
+      background: rgba(6, 182, 212, 0.12);
+      border-color: rgba(6, 182, 212, 0.35);
+      color: var(--accent-cyan);
+    }
+    .btn-inspect:hover {
+      background: var(--accent-cyan);
+      color: #050811;
+      border-color: var(--accent-cyan);
+    }
+
+    /* Modal Architecture Drawer */
+    .arch-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(5, 8, 17, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 20px;
+    }
+    .arch-modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .arch-modal {
+      background: #0b1120;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 22px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.2);
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+      color: #f8fafc;
+    }
+    .arch-modal-overlay.open .arch-modal {
+      transform: scale(1);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+    }
+    .modal-head h3 {
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+      color: #fff;
+      font-size: 18px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close-btn:hover {
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+    .modal-arch-flow {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent-cyan);
+      margin: 16px 0;
+      line-height: 1.6;
+    }
+    .modal-code-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: #cbd5e1;
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+
+    /* Experience Timeline */
+    .timeline {
+      position: relative;
+      border-left: 2px solid var(--line);
+      margin-left: 12px;
+      padding-left: 36px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 44px;
+    }
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -44px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .timeline-item h3 {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .timeline-org {
+      font-size: 15px;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .timeline-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: var(--mute);
+      margin-bottom: 12px;
+    }
+    .timeline-bullets {
+      list-style-type: none;
+    }
+    .timeline-bullets li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 9px;
+      color: var(--ink-dim);
+      font-size: 15px;
+    }
+    .timeline-bullets li strong {
+      color: var(--ink);
+    }
+    .timeline-bullets li::before {
+      content: "▪";
+      position: absolute;
+      left: 2px;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    /* Skills Grid */
+    .skills-section-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
+    .skill-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px;
+      backdrop-filter: blur(14px);
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .skill-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .skill-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+    }
+    .skill-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .skill-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .skill-chip:hover {
+      background: rgba(99, 102, 241, 0.16);
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Education & Certifications */
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .info-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(14px);
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .info-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--card-hover-border);
+    }
+    .info-card h3 {
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .info-list {
+      list-style-type: none;
+    }
+    .info-list li {
+      margin-bottom: 14px;
+      padding-left: 20px;
+      position: relative;
+      font-size: 14.5px;
+      color: var(--ink-dim);
+    }
+    .info-list li strong {
+      color: var(--ink);
+    }
+    .info-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* Contact Callout & Quick Message Composer */
+    .contact-box {
+      margin: 60px 0 30px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.14) 0%, rgba(6, 182, 212, 0.09) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 26px;
+      padding: 50px 36px;
+      text-align: center;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(99, 102, 241, 0.1);
+    }
+    .contact-box h2 {
+      font-size: clamp(30px, 4.2vw, 46px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+    .contact-box p {
+      color: var(--mute);
+      font-size: 17.5px;
+      max-width: 50ch;
+      margin: 0 auto 34px;
+      line-height: 1.6;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Command Palette Modal (Ctrl + K) */
+    .cmd-palette-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(5, 8, 17, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 10001;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 14vh;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .cmd-palette-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .cmd-palette {
+      background: #0b1120;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 18px;
+      width: 90%;
+      max-width: 560px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+    .cmd-input-wrap {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      gap: 12px;
+    }
+    .cmd-input-wrap input {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      color: #fff;
+      font-family: inherit;
+      width: 100%;
+    }
+    .cmd-list {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .cmd-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: #cbd5e1;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cmd-item:hover, .cmd-item.selected {
+      background: rgba(99, 102, 241, 0.25);
+      color: #fff;
+    }
+    .cmd-item kbd {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Floating Toast Notification */
+    #toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0b1120;
+      border: 1px solid var(--accent);
+      color: #f8fafc;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 10002;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #toast-msg.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    footer {
+      padding: 36px 0 54px;
+      text-align: center;
+      color: var(--mute);
+      font-size: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 950px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-3d-box { height: 320px; }
+      .sandbox-console { grid-template-columns: 1fr; }
+      .graph-nodes-row { grid-template-columns: 1fr 1fr; }
+      .two-cols { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .contact-box { padding: 36px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Scroll Progress Indicator -->
+  <div id="scroll-progress"></div>
+
+  <!-- Custom Trailing Glow Cursor -->
+  <div class="custom-cursor-dot" id="cursorDot"></div>
+  <div class="custom-cursor-ring" id="cursorRing"></div>
+
+  <!-- Fullscreen 3D Synapse Particle Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+  <div class="cyber-grid"></div>
+
+  <!-- Floating Toast Message Container -->
+  <div id="toast-msg"></div>
+
+  <div class="content-layer">
+
+    <!-- Top Navigation -->
+    <nav>
+      <div class="wrap nav-inner">
+        <a href="#" class="logo">
+          <span>Podila Ugender</span>
+          <span class="logo-badge">AI &amp; ML</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#projects">Projects</a>
+          <a href="https://pathways-3d-learning.onrender.com" target="_blank" rel="noopener" style="color: var(--accent-cyan); font-weight: 700;">Live Demo ↗</a>
+          <a href="#sandbox">Live AI Sandbox</a>
+          <a href="#benchmarks">Benchmarks</a>
+          <a href="#experience">Experience</a>
+          <a href="#skills">Skills</a>
+          <a href="#education">Education</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+          <!-- Command Palette Launcher -->
+          <button class="icon-btn cmd-btn" id="openCmdBtn" title="Press Ctrl + K to search">
+            <span>⌘K</span>
+            <kbd>Ctrl+K</kbd>
+          </button>
+
+          <!-- Audio FX Toggle (Web Audio Synth) -->
+          <button class="icon-btn" id="audioToggle" title="Toggle UI sound synthesis">
+            <span id="audioIcon">🔊</span>
+            <span id="audioLabel">FX</span>
+          </button>
+
+          <!-- 3D Particle Galaxy Speed Toggle -->
+          <button class="icon-btn" id="galaxyToggle" title="Click to adjust 3D Particle Dynamics">
+            <span>🌌</span>
+            <span id="galaxyStatus">Active</span>
+          </button>
+
+          <!-- Dark / Light Theme -->
+          <button class="icon-btn" id="themeToggle" aria-label="Toggle dark/light theme">
+            <span id="themeIcon">☀️</span>
+          </button>
+
+          <!-- ATS Resume Link -->
+          <a href="Podila_Ugender_Resume.html" class="btn-resume" title="View & Print 1-Page ATS Resume">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            ATS Resume
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section with Live 3D Neural Viewport -->
+    <header class="hero wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="status-pill">
+            <span class="pulse-dot"></span>
+            Available for AI/ML Roles &amp; Internships (Graduating 2027)
+          </div>
+
+          <h1>
+            I architect <br>
+            <span class="gradient-text" id="typewriter-text">Agentic AI &amp; Vision Systems</span><span class="cursor-blink">|</span>
+          </h1>
+
+          <p class="lead">
+            AI &amp; Machine Learning Engineer with <strong>3 completed engineering internships</strong> and <strong>6+ production repositories</strong>. From Vision Transformers (Meta DINOv2) and LangGraph agentic RAG workflows to high-performance WebGL applications with Three.js and containerized FastAPI backends.
+          </p>
+
+          <div class="hero-actions">
+            <a href="https://pathways-3d-learning.onrender.com" target="_blank" rel="noopener" class="btn-main btn-primary" title="Launch Pathways 3D Live Spatial Learning Academy">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              Live Demo: Pathways 3D ↗
+            </a>
+            <a href="#sandbox" class="btn-main btn-cyan">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Live AI Sandbox
+            </a>
+            <a href="Podila_Ugender_Resume.html" class="btn-main btn-outline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              1-Page Resume
+            </a>
+            <a href="https://github.com/ugender9" target="_blank" rel="noopener" class="btn-main btn-outline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub (@ugender9)
+            </a>
+          </div>
+        </div>
+
+        <!-- 3D Interactive Model Box -->
+        <div class="hero-3d-box">
+          <canvas id="hero-canvas"></canvas>
+          <div class="hero-3d-header">
+            <span class="hero-3d-title">
+              <span class="pulse-dot"></span>
+              3D NEURAL CORE &bull; WEBGL
+            </span>
+            <span class="hud-tag" id="fpsCounter">60 FPS</span>
+          </div>
+
+          <div class="hero-3d-controls">
+            <div class="model-controls-group">
+              <button class="model-switch-btn" id="switchShapeBtn" title="Cycle 3D Geometry">
+                🔄 <strong id="currentShapeName">Torus Knot</strong>
+              </button>
+              <button class="model-switch-btn" id="switchStyleBtn" title="Toggle Hologram Shader Style">
+                ✨ <strong id="currentStyleName">Hologram</strong>
+              </button>
+            </div>
+            <span class="hud-tag">DRAG TO ROTATE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Engineering Pipeline Strip -->
+      <div class="pipe-container">
+        <div class="pipe-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Full-Lifecycle Engineering Pipeline
+        </div>
+        <div class="pipe-steps">
+          <div class="pipe-step">
+            <div class="step-num">01 / INGESTION</div>
+            <strong>Data &amp; Embeddings</strong>
+            <span>ChromaDB, Pandas, SQL, NLTK</span>
+          </div>
+          <div class="pipe-step">
+            <div class="step-num">02 / MODELING</div>
+            <strong>Foundations &amp; ML</strong>
+            <span>DINOv2 (ViT), PyTorch, XGBoost</span>
+          </div>
+          <div class="pipe-step">
+            <div class="step-num">03 / ORCHESTRATION</div>
+            <strong>Agentic RAG &amp; APIs</strong>
+            <span>LangGraph, LangChain, FastAPI</span>
+          </div>
+          <div class="pipe-step">
+            <div class="step-num">04 / PRODUCTION</div>
+            <strong>Shipping &amp; CI/CD</strong>
+            <span>Docker, Next.js 15, Render, Tests</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Metrics Grid -->
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-num">3</div>
+          <div class="metric-label">Completed Engineering Internships</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">6+</div>
+          <div class="metric-label">Shipped AI &amp; GenAI Repositories</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">92%</div>
+          <div class="metric-label">NLP Plagiarism Detector Accuracy</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">88%</div>
+          <div class="metric-label">Clinical Diabetes Model Accuracy</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-num">8.7</div>
+          <div class="metric-label">B.Tech CGPA / 10.0 (SCIENT)</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================================
+         SECTION: LIVE AI AGENT & PIPELINE SANDBOX
+         ======================================================== -->
+    <section id="sandbox" class="wrap">
+      <div class="section-head">
+        <div class="section-tag">Interactive Architecture Simulator</div>
+        <h2>Live Agent &amp; Neural Pipeline Sandbox</h2>
+        <p>Trigger real-time simulated LangGraph state transitions, vector retrieval queries, and vision tokenizers right in your browser.</p>
+      </div>
+
+      <div class="sandbox-container">
+        <div class="sandbox-header">
+          <div class="sandbox-title-wrap">
+            <h3>⚡ Autonomous Pipeline Cockpit</h3>
+            <p>Select an architectural scenario and run the state graph to observe telemetry and token streaming.</p>
+          </div>
+
+          <div class="scenario-picker">
+            <button class="scenario-btn active" data-scenario="zepto">📦 Zepto RAG (LangGraph)</button>
+            <button class="scenario-btn" data-scenario="dinov2">👁️ DINOv2 Segmentation</button>
+            <button class="scenario-btn" data-scenario="socratic">🛡️ Socratic Guardrail</button>
+            <button class="scenario-btn" data-scenario="retinopathy">🏥 Retinopathy Grad-CAM</button>
+          </div>
+        </div>
+
+        <!-- Interactive 4-Node Pipeline Graph -->
+        <div class="graph-nodes-row" id="graphNodesContainer">
+          <div class="graph-node" id="node-1">
+            <div class="node-header"><span>NODE 01</span><span class="node-badge">INPUT</span></div>
+            <div class="node-name" id="node-1-title">Query Parser</div>
+            <div class="node-status" id="node-1-desc">Idle</div>
+          </div>
+          <div class="graph-node" id="node-2">
+            <div class="node-header"><span>NODE 02</span><span class="node-badge">VECTORS</span></div>
+            <div class="node-name" id="node-2-title">ChromaDB Search</div>
+            <div class="node-status" id="node-2-desc">Idle</div>
+          </div>
+          <div class="graph-node" id="node-3">
+            <div class="node-header"><span>NODE 03</span><span class="node-badge">SAFETY</span></div>
+            <div class="node-name" id="node-3-title">Policy Guardrail</div>
+            <div class="node-status" id="node-3-desc">Idle</div>
+          </div>
+          <div class="graph-node" id="node-4">
+            <div class="node-header"><span>NODE 04</span><span class="node-badge">OUTPUT</span></div>
+            <div class="node-name" id="node-4-title">LLM Synthesizer</div>
+            <div class="node-status" id="node-4-desc">Idle</div>
+          </div>
+        </div>
+
+        <!-- Sandbox Console -->
+        <div class="sandbox-console">
+          <div class="console-input-pane">
+            <div>
+              <div class="pane-label">
+                <span>INCOMING PAYLOAD</span>
+                <span id="scenarioTypeBadge">LangGraph StateGraph</span>
+              </div>
+              <div class="input-prompt-text" id="sandboxPromptText">
+                "Can I return perishable dairy milk 45 minutes after delivery if the seal is intact?"
+              </div>
+            </div>
+
+            <div class="sandbox-actions">
+              <button class="btn-main btn-primary" id="runPipelineBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Execute Pipeline
+              </button>
+              <div class="telemetry-row">
+                <span>Latency: <strong class="telemetry-val" id="telemetryLatency">0 ms</strong></span>
+                <span>Confidence: <strong class="telemetry-val" id="telemetryConfidence">0%</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="console-output-pane">
+            <div class="pane-label">
+              <span>STREAMED RESPONSE &amp; TELEMETRY</span>
+              <span id="streamStatus">READY</span>
+            </div>
+            <div class="output-stream" id="sandboxOutputStream">
+Click "Execute Pipeline" to inspect real-time state traversal, retrieved vector chunks, and formatted agent synthesis.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION: BENCHMARKS & MODEL COMPARISONS
+         ======================================================== -->
+    <section id="benchmarks" class="wrap">
+      <div class="section-head">
+        <div class="section-tag">Quantitative Validation</div>
+        <h2>Empirical Model Benchmarks</h2>
+        <p>Rigorous offline evaluations measuring segmentation overlap (mIoU), NLP precision, and model calibration.</p>
+      </div>
+
+      <div class="benchmark-grid">
+        <!-- Card 1: DINOv2 vs CNN Baselines -->
+        <div class="bench-card">
+          <h4>👁️ Off-Road Terrain Segmentation</h4>
+          <p class="sub">Evaluation on 10 terrain classes using Mean Intersection over Union (mIoU)</p>
+
+          <div class="bar-group">
+            <div class="bar-meta"><span>Meta DINOv2 ViT-S/14 (Ours)</span><strong>86.4% mIoU</strong></div>
+            <div class="bar-track"><div class="bar-fill bar-fill-cyan" style="width: 86.4%;"></div></div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-meta"><span>ResNet-50 FCN Baseline</span><strong>71.2% mIoU</strong></div>
+            <div class="bar-track"><div class="bar-fill" style="width: 71.2%; background: #64748b;"></div></div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-meta"><span>Vanilla UNet Baseline</span><strong>68.5% mIoU</strong></div>
+            <div class="bar-track"><div class="bar-fill" style="width: 68.5%; background: #475569;"></div></div>
+          </div>
+          <p style="font-size: 12.5px; color: var(--mute); margin-top: 14px;">
+            Self-supervised ViT patch features capture subtle trail boundaries and muddy vegetation without overfitting on small datasets.
+          </p>
+        </div>
+
+        <!-- Card 2: NLP Plagiarism Detection -->
+        <div class="bench-card">
+          <h4>📄 NLP Document Similarity (Slash Mark)</h4>
+          <p class="sub">Evaluation on heterogeneous multi-format text corpora</p>
+
+          <div class="bar-group">
+            <div class="bar-meta"><span>Cosine + Jaccard Hybrid (Ours)</span><strong>92.0% Accuracy</strong></div>
+            <div class="bar-track"><div class="bar-fill bar-fill-emerald" style="width: 92%;"></div></div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-meta"><span>Standard Jaccard String Match</span><strong>74.5% Accuracy</strong></div>
+            <div class="bar-track"><div class="bar-fill" style="width: 74.5%; background: #64748b;"></div></div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-meta"><span>Pipeline Latency Reduction</span><strong>35.0% Speedup</strong></div>
+            <div class="bar-track"><div class="bar-fill bar-fill-indigo" style="width: 70%;"></div></div>
+          </div>
+          <p style="font-size: 12.5px; color: var(--mute); margin-top: 14px;">
+            NLTK lemmatization and custom hashed inverted indexing slashed runtime latency by 35% across massive document sets.
+          </p>
+        </div>
+
+        <!-- Card 3: Clinical Prediction & XAI -->
+        <div class="bench-card">
+          <h4>🏥 Clinical Diabetes &amp; Retinopathy</h4>
+          <p class="sub">Accuracy &amp; Expected Calibration Error (ECE) for medical decision support</p>
+
+          <div class="bar-group">
+            <div class="bar-meta"><span>Clinical Diabetes Predictor</span><strong>88.0% Accuracy</strong></div>
+            <div class="bar-track"><div class="bar-fill bar-fill-indigo" style="width: 88%;"></div></div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-meta"><span>Retinopathy CNN Sensitivity</span><strong>91.4% Recall</strong></div>
+            <div class="bar-track"><div class="bar-fill bar-fill-cyan" style="width: 91.4%;"></div></div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-meta"><span>Post-Temperature Calibration ECE</span><strong>3.2% Low Error</strong></div>
+            <div class="bar-track"><div class="bar-fill bar-fill-emerald" style="width: 96.8%;"></div></div>
+          </div>
+          <p style="font-size: 12.5px; color: var(--mute); margin-top: 14px;">
+            Grad-CAM visual overlays allow clinical doctors to audit pixel-level lesion evidence before signing off on diagnosis.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION: FEATURED REPOSITORIES (3D TILT CARDS + ARCH INSPECT)
+         ======================================================== -->
+    <section id="projects" class="wrap">
+      <div class="section-head">
+        <div class="section-tag">Featured Repositories &bull; 3D Interactive Cards</div>
+        <h2>Engineered Systems, Not Toy Notebooks</h2>
+        <p>Hover over cards to experience interactive 3D physics tilt and specular glass reflection. Click "Inspect Architecture" for deep-dive system diagrams.</p>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All Projects (6)</button>
+        <button class="filter-btn" data-filter="genai">Agentic AI &amp; RAG</button>
+        <button class="filter-btn" data-filter="cv">Computer Vision &amp; Deep Learning</button>
+        <button class="filter-btn" data-filter="fullstack">Full-Stack AI Web Apps</button>
+      </div>
+
+      <div class="projects-grid">
+
+        <!-- Project 1: Pathways 3D -->
+        <article class="project-card" data-category="genai fullstack" data-project-id="pathways">
+          <div class="card-glare"></div>
+          <div class="layer-3d-mid">
+            <div class="project-top">
+              <span class="badge-live">● Live on Render</span>
+              <span class="badge-repo">Full-Stack AI &bull; Three.js</span>
+            </div>
+            <h3 class="layer-3d-pop">Pathways 3D (Topicwave) — Spatial AI Academy</h3>
+            <p class="desc">
+              Spatial learning operating system transforming 200+ YouTube tutorials into structured, 3-phase masterclass curriculums with Three.js particle physics.
+            </p>
+            <ul class="project-highlights">
+              <li><strong>Interactive 3D Universe:</strong> 350-particle Three.js galaxy responding dynamically to cursor inertia and physics-based 3D tilt cards.</li>
+              <li><strong>AI Lesson Intelligence:</strong> Synthesizes architectural takeaways via OpenAI &amp; Vercel AI SDK, with browser-native Web Speech audio synthesis.</li>
+              <li><strong>10-Question Adaptive Quizzes:</strong> Auto-evaluates conceptual scenarios with technical explanations and confetti feedback.</li>
+            </ul>
+          </div>
+          <div class="layer-3d-mid">
+            <div class="tech-stack">
+              <span class="tech-pill">Next.js 15</span>
+              <span class="tech-pill">TypeScript</span>
+              <span class="tech-pill">Three.js WebGL</span>
+              <span class="tech-pill">OpenAI API</span>
+              <span class="tech-pill">Vercel AI SDK</span>
+              <span class="tech-pill">Render CI/CD</span>
+            </div>
+            <div class="project-links-row">
+              <a href="https://pathways-3d-learning.onrender.com" target="_blank" rel="noopener" class="link-btn primary">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Live Demo
+              </a>
+              <button class="link-btn btn-inspect" onclick="openArchModal('pathways')">
+                🔍 Architecture
+              </button>
+              <a href="https://github.com/ugender9/pathways-3d-learning" target="_blank" rel="noopener" class="link-btn">
+                GitHub Code
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2: Zepto Support Assistant -->
+        <article class="project-card" data-category="genai" data-project-id="zepto">
+          <div class="card-glare"></div>
+          <div class="layer-3d-mid">
+            <div class="project-top">
+              <span class="badge-repo">LangGraph &bull; 3 Nodes</span>
+              <span class="badge-repo">Docker Container</span>
+            </div>
+            <h3 class="layer-3d-pop">Zepto Support Assistant — RAG Policy Q&amp;A</h3>
+            <p class="desc">
+              Production-grade customer support assistant grounded strictly in Zepto's official policy corpus (delivery, returns, refunds, memberships) with zero hallucination.
+            </p>
+            <ul class="project-highlights">
+              <li><strong>LangGraph 3-Node Workflow:</strong> State graph orchestrating query intent classification into policy retrieval vs. direct conversational fallbacks.</li>
+              <li><strong>Persistent ChromaDB:</strong> Chunks and embeds 8 policy documents locally using <code>all-MiniLM-L6-v2</code> without requiring external paid embedding APIs.</li>
+              <li><strong>Containerized FastAPI:</strong> Packaged in Docker (port 7860) with standard Pydantic schema validation and mock/live LLM toggling.</li>
+            </ul>
+          </div>
+          <div class="layer-3d-mid">
+            <div class="tech-stack">
+              <span class="tech-pill">LangGraph</span>
+              <span class="tech-pill">ChromaDB</span>
+              <span class="tech-pill">Sentence-Transformers</span>
+              <span class="tech-pill">FastAPI</span>
+              <span class="tech-pill">Docker</span>
+              <span class="tech-pill">Python 3.11</span>
+            </div>
+            <div class="project-links-row">
+              <a href="https://github.com/ugender9/zepto-capstone" target="_blank" rel="noopener" class="link-btn primary">
+                GitHub: zepto-capstone
+              </a>
+              <button class="link-btn btn-inspect" onclick="openArchModal('zepto')">
+                🔍 Architecture
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3: Off-Road DINOv2 Segmentation -->
+        <article class="project-card" data-category="cv" data-project-id="dinov2">
+          <div class="card-glare"></div>
+          <div class="layer-3d-mid">
+            <div class="project-top">
+              <span class="badge-repo">Vision Transformer</span>
+              <span class="badge-repo">Meta DINOv2</span>
+            </div>
+            <h3 class="layer-3d-pop">Off-Road Terrain Segmentation with DINOv2</h3>
+            <p class="desc">
+              Computer vision semantic segmentation pipeline using Meta’s self-supervised DINOv2 Vision Transformer backbone for unpaved autonomous vehicle navigation.
+            </p>
+            <ul class="project-highlights">
+              <li><strong>Foundation Model Backbone:</strong> Leverages DINOv2 ViT-S/14 patch features paired with a tailored linear segmentation head.</li>
+              <li><strong>10 Granular Terrain Classes:</strong> Accurately segments obstacles, vegetation, trails, and rough terrain surfaces (86.4% mIoU).</li>
+              <li><strong>Strict Evaluation:</strong> Evaluated using Mean Intersection over Union with structured training and inference scripts.</li>
+            </ul>
+          </div>
+          <div class="layer-3d-mid">
+            <div class="tech-stack">
+              <span class="tech-pill">PyTorch</span>
+              <span class="tech-pill">Meta DINOv2 (ViT)</span>
+              <span class="tech-pill">OpenCV</span>
+              <span class="tech-pill">Semantic Segmentation</span>
+              <span class="tech-pill">Mean IoU</span>
+            </div>
+            <div class="project-links-row">
+              <a href="https://github.com/ugender9/offroad-segmentation-dinov2" target="_blank" rel="noopener" class="link-btn primary">
+                GitHub: offroad-segmentation-dinov2
+              </a>
+              <button class="link-btn btn-inspect" onclick="openArchModal('dinov2')">
+                🔍 Architecture
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 4: AI Socratic Tutor -->
+        <article class="project-card" data-category="genai" data-project-id="socratic">
+          <div class="card-glare"></div>
+          <div class="layer-3d-mid">
+            <div class="project-top">
+              <span class="badge-repo">Zero Dependencies</span>
+              <span class="badge-repo">LLM Guardrails</span>
+            </div>
+            <h3 class="layer-3d-pop">AI Socratic Tutor — Guardrail Engine</h3>
+            <p class="desc">
+              Pedagogical AI engine guiding students to answers through progressive questioning rather than direct answers, with deterministic guardrails.
+            </p>
+            <ul class="project-highlights">
+              <li><strong>Two-Layer Answer-Leak Guardrail:</strong> Layer 1 deterministic structural regex check + Layer 2 isolated LLM compliance verifier to prevent answer leaks.</li>
+              <li><strong>Stateful 5-Level Hint Escalation:</strong> Adjusts hint specificity dynamically based on student struggle patterns; session state saved in SQLite.</li>
+              <li><strong>Pure Python Stdlib:</strong> Custom HTTP server, regex router, LLM client, and storage written with zero third-party dependencies.</li>
+            </ul>
+          </div>
+          <div class="layer-3d-mid">
+            <div class="tech-stack">
+              <span class="tech-pill">Python Stdlib</span>
+              <span class="tech-pill">LLM Guardrails</span>
+              <span class="tech-pill">SQLite</span>
+              <span class="tech-pill">State Machines</span>
+              <span class="tech-pill">Unit Testing</span>
+            </div>
+            <div class="project-links-row">
+              <a href="https://github.com/ugender9/ai-socratic-tutor" target="_blank" rel="noopener" class="link-btn primary">
+                GitHub: ai-socratic-tutor
+              </a>
+              <button class="link-btn btn-inspect" onclick="openArchModal('socratic')">
+                🔍 Architecture
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 5: Smart Campus Bulletin Board -->
+        <article class="project-card" data-category="genai fullstack" data-project-id="bulletin">
+          <div class="card-glare"></div>
+          <div class="layer-3d-mid">
+            <div class="project-top">
+              <span class="badge-live">● Live on Firebase</span>
+              <span class="badge-repo">Google Gemini</span>
+            </div>
+            <h3 class="layer-3d-pop">Smart Campus Bulletin Board — Gemini AI</h3>
+            <p class="desc">
+              AI-powered campus notice management platform built for <strong>TechSprint Hackathon 2025–26 (GDGoC VVIET)</strong>. Automatically categorizes and personalizes campus notices.
+            </p>
+            <ul class="project-highlights">
+              <li><strong>Automated Gemini AI Analysis:</strong> Extracts notice urgency, event dates, tags, and category taxonomies from raw announcements.</li>
+              <li><strong>Real-Time Synchronization:</strong> Updates connected student and faculty clients in real time via Firebase Firestore listeners.</li>
+              <li><strong>Microservices Architecture:</strong> Flask REST API backend integrated with Firebase Authentication and Cloud Storage.</li>
+            </ul>
+          </div>
+          <div class="layer-3d-mid">
+            <div class="tech-stack">
+              <span class="tech-pill">Google Gemini API</span>
+              <span class="tech-pill">Flask</span>
+              <span class="tech-pill">Firebase Firestore</span>
+              <span class="tech-pill">Firebase Hosting</span>
+              <span class="tech-pill">REST API</span>
+            </div>
+            <div class="project-links-row">
+              <a href="https://quantumdashboard9.web.app" target="_blank" rel="noopener" class="link-btn primary">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Live App
+              </a>
+              <button class="link-btn btn-inspect" onclick="openArchModal('bulletin')">
+                🔍 Architecture
+              </button>
+              <a href="https://github.com/ugender9/smart-bulletin-board" target="_blank" rel="noopener" class="link-btn">
+                GitHub Code
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 6: Explainable AI Diabetic Retinopathy -->
+        <article class="project-card" data-category="cv" data-project-id="retinopathy">
+          <div class="card-glare"></div>
+          <div class="layer-3d-mid">
+            <div class="project-top">
+              <span class="badge-repo">Medical XAI</span>
+              <span class="badge-repo">PyTorch CNN</span>
+            </div>
+            <h3 class="layer-3d-pop">Explainable AI: Diabetic Retinopathy</h3>
+            <p class="desc">
+              End-to-end 5-stage clinical screening prototype for 5-class ICDR grading, interpretability heatmaps, and hospital queuing deployment simulation.
+            </p>
+            <ul class="project-highlights">
+              <li><strong>Calibrated Deep Learning:</strong> PyTorch CNN with weighted loss, Grad-CAM visual attention, and temperature scaling for trusted clinician review.</li>
+              <li><strong>Deployment Simulation:</strong> Modeled screening queues, ophthalmologist staffing, and review SLAs using SimPy discrete-event modeling.</li>
+              <li><strong>Clinician Console:</strong> FastAPI web console allowing ophthalmologists to accept or override AI predictions with logged audit trails.</li>
+            </ul>
+          </div>
+          <div class="layer-3d-mid">
+            <div class="tech-stack">
+              <span class="tech-pill">PyTorch</span>
+              <span class="tech-pill">Grad-CAM</span>
+              <span class="tech-pill">FastAPI</span>
+              <span class="tech-pill">SimPy</span>
+              <span class="tech-pill">Computer Vision</span>
+            </div>
+            <div class="project-links-row">
+              <a href="https://github.com/ugender9" target="_blank" rel="noopener" class="link-btn primary">
+                View on GitHub
+              </a>
+              <button class="link-btn btn-inspect" onclick="openArchModal('retinopathy')">
+                🔍 Architecture
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Professional Experience -->
+    <section id="experience" class="wrap">
+      <div class="section-head">
+        <div class="section-tag">Engineering Trajectory</div>
+        <h2>Internship Experience</h2>
+        <p>Three completed internships delivering measurable outcomes across GenAI, NLP, and Predictive ML.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h3>AI/ML Intern</h3>
+          <div class="timeline-org">Innomatics Research Labs &bull; Hyderabad, India</div>
+          <div class="timeline-date">FEB 2026 – MAY 2026</div>
+          <ul class="timeline-bullets">
+            <li>Architected and deployed agentic AI workflows with <strong>LangChain and OpenAI APIs</strong>: built autonomous multi-step pipelines with tool calling, memory management, and structured schema outputs.</li>
+            <li>Engineered machine learning pipelines and integrated <strong>Microsoft Azure AI services</strong> on production client systems.</li>
+            <li>Authored <strong>10+ technical deep-dive guides</strong> covering Python data structures, NLP, and GenAI to scale team knowledge.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h3>Python &amp; ML Intern</h3>
+          <div class="timeline-org">Slash Mark &bull; Remote</div>
+          <div class="timeline-date">OCT 2024 – NOV 2024</div>
+          <ul class="timeline-bullets">
+            <li>Built an intelligent document plagiarism detection system in Python using Cosine Similarity and Jaccard Index, achieving <strong>92% accuracy</strong> across multi-format text corpora.</li>
+            <li>Engineered NLTK preprocessing pipelines (tokenization, lemmatization, normalization) and refactored core data structures for a <strong>35% speedup</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h3>Machine Learning Intern</h3>
+          <div class="timeline-org">GWING Software Technologies &bull; Hyderabad, India</div>
+          <div class="timeline-date">SEP 2024 – OCT 2024</div>
+          <ul class="timeline-bullets">
+            <li>Developed a clinical diabetes prediction model in Python, achieving <strong>88% accuracy</strong> on 768 patient clinical records.</li>
+            <li>Engineered data pipelines for missing value imputation and outlier clipping prior to training.</li>
+            <li>Benchmarked Logistic Regression, Decision Trees, Random Forests, and SVMs with cross-validation to select the best production classifier.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Breakdown -->
+    <section id="skills" class="wrap">
+      <div class="section-head">
+        <div class="section-tag">Technical Toolkit</div>
+        <h2>Full-Stack AI Capabilities</h2>
+        <p>Comprehensive skills spanning mathematics, modeling, orchestration, and full-stack delivery.</p>
+      </div>
+
+      <div class="skills-section-grid">
+        <div class="skill-card">
+          <h3>🤖 GenAI &amp; Agentic AI</h3>
+          <div class="skill-chips">
+            <span class="skill-chip">LangGraph</span>
+            <span class="skill-chip">LangChain</span>
+            <span class="skill-chip">RAG Pipelines</span>
+            <span class="skill-chip">ChromaDB</span>
+            <span class="skill-chip">Sentence-Transformers</span>
+            <span class="skill-chip">OpenAI API</span>
+            <span class="skill-chip">Google Gemini API</span>
+            <span class="skill-chip">IBM watsonx.ai</span>
+            <span class="skill-chip">LLM Guardrails</span>
+            <span class="skill-chip">Prompt Engineering</span>
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <h3>🧠 Machine Learning &amp; CV</h3>
+          <div class="skill-chips">
+            <span class="skill-chip">PyTorch</span>
+            <span class="skill-chip">Meta DINOv2 (ViT)</span>
+            <span class="skill-chip">OpenCV</span>
+            <span class="skill-chip">scikit-learn</span>
+            <span class="skill-chip">XGBoost</span>
+            <span class="skill-chip">Random Forest</span>
+            <span class="skill-chip">Grad-CAM</span>
+            <span class="skill-chip">NLTK</span>
+            <span class="skill-chip">SMOTE Imbalance</span>
+            <span class="skill-chip">Model Calibration</span>
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <h3>💻 Languages &amp; Data</h3>
+          <div class="skill-chips">
+            <span class="skill-chip">Python</span>
+            <span class="skill-chip">TypeScript</span>
+            <span class="skill-chip">JavaScript</span>
+            <span class="skill-chip">SQL</span>
+            <span class="skill-chip">Pandas</span>
+            <span class="skill-chip">NumPy</span>
+            <span class="skill-chip">Matplotlib</span>
+            <span class="skill-chip">Beautiful Soup</span>
+          </div>
+        </div>
+
+        <div class="skill-card">
+          <h3>🚀 Full-Stack, Cloud &amp; DevOps</h3>
+          <div class="skill-chips">
+            <span class="skill-chip">FastAPI</span>
+            <span class="skill-chip">Next.js 15</span>
+            <span class="skill-chip">React</span>
+            <span class="skill-chip">Three.js (WebGL)</span>
+            <span class="skill-chip">Flask</span>
+            <span class="skill-chip">SQLite</span>
+            <span class="skill-chip">Firebase</span>
+            <span class="skill-chip">Docker</span>
+            <span class="skill-chip">Azure AI</span>
+            <span class="skill-chip">GitHub CI/CD</span>
+            <span class="skill-chip">Render</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education & Hackathons -->
+    <section id="education" class="wrap">
+      <div class="two-cols">
+        <div class="info-card">
+          <h3>🎓 Education</h3>
+          <ul class="info-list">
+            <li>
+              <strong>B.Tech in Artificial Intelligence &amp; Machine Learning</strong> (2023 – 2027)<br>
+              SCIENT Institute of Technology, Hyderabad<br>
+              <strong>CGPA: 8.7 / 10.0</strong>
+            </li>
+            <li>
+              <strong>Relevant Coursework:</strong> Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, Data Structures &amp; Algorithms, Database Systems, Cloud Computing.
+            </li>
+            <li>
+              <strong>Class XII (Intermediate):</strong> Telangana State Board — <strong>87%</strong>
+            </li>
+            <li>
+              <strong>Class X (Secondary):</strong> Telangana State Board — <strong>100% (10.0 GPA)</strong>
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>🏆 Industry Credentials &amp; Hackathons</h3>
+          <ul class="info-list">
+            <li>
+              <strong>Deloitte Australia:</strong> Data Analytics Job Simulation.
+            </li>
+            <li>
+              <strong>IBM SkillsBuild:</strong> AI Automation &amp; Intelligent Solutions Internship.
+            </li>
+            <li>
+              <strong>Microsoft Azure AI Essentials:</strong> Workloads &amp; Machine Learning on Azure (Microsoft &amp; LinkedIn Learning, Oct 2025).
+            </li>
+            <li>
+              <strong>Google AI Agents Intensive:</strong> 5-Day Intensive Course with Google — Innomatics Research Labs.
+            </li>
+            <li>
+              <strong>TechSprint Hackathon 2025–26:</strong> Google Developer Group on Campus (GDGoC), VVIET Mysuru. Built Smart Bulletin Board with Gemini AI.
+            </li>
+            <li>
+              <strong>IBM AI Builders Challenge (July 2025):</strong> Engineered Branching Story Engine with IBM Granite LLM (watsonx.ai).
+            </li>
+            <li>
+              <strong>24-Hour Code4EdTech Hack-A-Thon '25:</strong> Innomatics Research Labs.
+            </li>
+            <li>
+              <strong>Startup India Recognized Community Recognition:</strong> Smarted Innovations (Jun 2025).
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Callout -->
+    <section id="contact" class="wrap">
+      <div class="contact-box">
+        <h2>Let's build intelligent systems together.</h2>
+        <p>I'm actively interviewing for AI/ML Engineer roles and internships. Feel free to copy my direct contact details or reach out via email.</p>
+        <div class="contact-links">
+          <button class="btn-main btn-primary" onclick="copyEmailToClipboard()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy: ugendharpodila9@gmail.com
+          </button>
+          <a href="mailto:ugendharpodila9@gmail.com?subject=AI%20Engineering%20Opportunity%20-%20Interview%20Invitation" class="btn-main btn-cyan">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Open Mail Client
+          </a>
+          <a href="tel:+917330700197" class="btn-main btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            +91 73307 00197
+          </a>
+          <a href="https://linkedin.com/in/ugender9" target="_blank" rel="noopener" class="btn-main btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/ugender9" target="_blank" rel="noopener" class="btn-main btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="wrap">
+      <p>© 2026 Podila Ugender &bull; AI &amp; Machine Learning Engineer &bull; Hyderabad, India &bull; Built with Three.js WebGL</p>
+    </footer>
+
+  </div>
+
+  <!-- ========================================================
+       MODAL: SYSTEM ARCHITECTURE DRAWER
+       ======================================================== -->
+  <div class="arch-modal-overlay" id="archModalOverlay">
+    <div class="arch-modal">
+      <div class="modal-head">
+        <div>
+          <span class="section-tag">System Deep Dive</span>
+          <h3 id="modalTitle">Architecture Inspection</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeArchModal()">&times;</button>
+      </div>
+      <div id="modalBody">
+        <!-- Dynamically injected architecture content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL: COMMAND PALETTE (CTRL + K)
+       ======================================================== -->
+  <div class="cmd-palette-overlay" id="cmdOverlay">
+    <div class="cmd-palette">
+      <div class="cmd-input-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="cmdInput" placeholder="Type a command or jump to section..." autofocus>
+      </div>
+      <div class="cmd-list" id="cmdList">
+        <div class="cmd-item" data-action="open-url" data-url="https://pathways-3d-learning.onrender.com"><span>🌐 Live Demo: Pathways 3D (Render)</span><kbd>D</kbd></div>
+        <div class="cmd-item" data-action="goto" data-target="#projects"><span>🚀 View Featured Projects</span><kbd>P</kbd></div>
+        <div class="cmd-item" data-action="goto" data-target="#sandbox"><span>⚡ Launch AI Agent Sandbox</span><kbd>S</kbd></div>
+        <div class="cmd-item" data-action="goto" data-target="#benchmarks"><span>📊 Inspect Model Benchmarks</span><kbd>B</kbd></div>
+        <div class="cmd-item" data-action="goto" data-target="#experience"><span>💼 Experience &amp; Internships</span><kbd>E</kbd></div>
+        <div class="cmd-item" data-action="open-url" data-url="Podila_Ugender_Resume.html"><span>📄 View / Print ATS Resume</span><kbd>R</kbd></div>
+        <div class="cmd-item" data-action="copy-email"><span>📋 Copy Email Address</span><kbd>C</kbd></div>
+        <div class="cmd-item" data-action="toggle-theme"><span>☀️ Toggle Theme (Dark / Light)</span><kbd>T</kbd></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       INTERACTIVE JAVASCRIPT & 3D WEBGL SYSTEMS
+       ======================================================== -->
+  <script>
+    // ==========================================
+    // 0. WEB AUDIO API SYNTHESIZER (0kb Zero Latency Audio FX)
+    // ==========================================
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+        if (type === 'hover') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.04);
+          gain.gain.setValueAtTime(0.015, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === 'click') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'success') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          gain.gain.setValueAtTime(0.03, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'tick') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1200, now);
+          gain.gain.setValueAtTime(0.02, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02);
+          osc.start(now);
+          osc.stop(now + 0.02);
+        }
+      } catch (err) {
+        // Silently fail if audio permissions blocked
+      }
+    }
+
+    const audioToggle = document.getElementById('audioToggle');
+    const audioIcon = document.getElementById('audioIcon');
+    const audioLabel = document.getElementById('audioLabel');
+
+    if (audioToggle) {
+      audioToggle.addEventListener('click', () => {
+        audioEnabled = !audioEnabled;
+        audioIcon.textContent = audioEnabled ? '🔊' : '🔇';
+        audioLabel.textContent = audioEnabled ? 'FX' : 'Mute';
+        showToast(audioEnabled ? 'Sound FX Enabled 🔊' : 'Sound FX Muted 🔇');
+        if (audioEnabled) playSound('click');
+      });
+    }
+
+    // Attach hover sound to buttons
+    document.querySelectorAll('button, a, .skill-chip, .metric-card').forEach(el => {
+      el.addEventListener('mouseenter', () => playSound('hover'));
+    });
+
+    // ==========================================
+    // 1. FLOATING TOAST NOTIFICATION
+    // ==========================================
+    function showToast(msg) {
+      const toast = document.getElementById('toast-msg');
+      if (!toast) return;
+      toast.innerHTML = `<span>✨</span><span>${msg}</span>`;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function copyEmailToClipboard() {
+      const email = 'ugendharpodila9@gmail.com';
+      navigator.clipboard.writeText(email).then(() => {
+        playSound('success');
+        showToast('Email copied to clipboard! (ugendharpodila9@gmail.com)');
+      }).catch(() => {
+        showToast('ugendharpodila9@gmail.com');
+      });
+    }
+
+    // ==========================================
+    // 2. SCROLL PROGRESS BAR & CUSTOM CURSOR
+    // ==========================================
+    const progressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.scrollY / totalScroll) * 100;
+      if (progressBar) progressBar.style.width = progress + '%';
+    });
+
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = -100, mouseY = -100;
+    let ringX = -100, ringY = -100;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (cursorDot) {
+        cursorDot.style.left = mouseX + 'px';
+        cursorDot.style.top = mouseY + 'px';
+      }
+    });
+
+    function animateCursorRing() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      if (cursorRing) {
+        cursorRing.style.left = ringX + 'px';
+        cursorRing.style.top = ringY + 'px';
+      }
+      requestAnimationFrame(animateCursorRing);
+    }
+    animateCursorRing();
+
+    document.querySelectorAll('a, button, .project-card, .metric-card, .graph-node').forEach(elem => {
+      elem.addEventListener('mouseenter', () => cursorRing && cursorRing.classList.add('active'));
+      elem.addEventListener('mouseleave', () => cursorRing && cursorRing.classList.remove('active'));
+    });
+
+    // ==========================================
+    // 3. DYNAMIC HERO TYPEWRITER
+    // ==========================================
+    const typewriterElement = document.getElementById('typewriter-text');
+    const phrases = [
+      "Agentic AI & LangGraph Workflows",
+      "Vision Transformers (Meta DINOv2)",
+      "Full-Stack WebGL & Three.js Systems",
+      "Production RAG with Local Vector DBs",
+      "Containerized FastAPI Microservices"
+    ];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeSpeed = 80;
+
+    function tickTypewriter() {
+      const currentPhrase = phrases[phraseIndex];
+      if (isDeleting) {
+        typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+        typeSpeed = 40;
+      } else {
+        typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+        typeSpeed = 80;
+      }
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        isDeleting = true;
+        typeSpeed = 2000; // Hold at end
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        typeSpeed = 400;
+      }
+
+      setTimeout(tickTypewriter, typeSpeed);
+    }
+    if (typewriterElement) setTimeout(tickTypewriter, 1000);
+
+    // ==========================================
+    // 4. FULLSCREEN 3D SYNAPSE NETWORK (Three.js)
+    // ==========================================
+    (function initSynapseBackground() {
+      const canvas = document.getElementById('webgl-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 250;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const particleCount = 280;
+      const positions = new Float32Array(particleCount * 3);
+      const velocities = [];
+
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 550;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 550;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 350;
+
+        velocities.push({
+          x: (Math.random() - 0.5) * 0.4,
+          y: (Math.random() - 0.5) * 0.4,
+          z: (Math.random() - 0.5) * 0.4
+        });
+      }
+
+      const pGeometry = new THREE.BufferGeometry();
+      pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      const pMaterial = new THREE.PointsMaterial({
+        color: 0x06b6d4,
+        size: 3.5,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending
+      });
+
+      const particleSystem = new THREE.Points(pGeometry, pMaterial);
+      scene.add(particleSystem);
+
+      // Synaptic Connection Lines
+      const lineMaterial = new THREE.LineBasicMaterial({
+        color: 0x6366f1,
+        transparent: true,
+        opacity: 0.22,
+        blending: THREE.AdditiveBlending
+      });
+
+      const lineGeometry = new THREE.BufferGeometry();
+      const linePositions = new Float32Array(particleCount * particleCount * 6);
+      lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+      const lineMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
+      scene.add(lineMesh);
+
+      let mouseWorldX = 0, mouseWorldY = 0;
+      let targetCamX = 0, targetCamY = 0;
+      let speedFactor = 1.0;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseWorldX = (e.clientX - window.innerWidth / 2) * 0.08;
+        mouseWorldY = (e.clientY - window.innerHeight / 2) * 0.08;
+      });
+
+      let scrollOffset = 0;
+      window.addEventListener('scroll', () => {
+        scrollOffset = window.scrollY;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        targetCamX += (mouseWorldX - targetCamX) * 0.05;
+        targetCamY += (mouseWorldY - targetCamY) * 0.05;
+
+        camera.position.x = targetCamX;
+        camera.position.y = -targetCamY + (scrollOffset * 0.04);
+        camera.lookAt(scene.position);
+
+        const posAttr = pGeometry.attributes.position;
+        let lineIdx = 0;
+        const linePos = lineGeometry.attributes.position.array;
+
+        for (let i = 0; i < particleCount; i++) {
+          posAttr.array[i * 3] += velocities[i].x * speedFactor;
+          posAttr.array[i * 3 + 1] += velocities[i].y * speedFactor;
+          posAttr.array[i * 3 + 2] += velocities[i].z * speedFactor;
+
+          // Boundary bouncing
+          if (Math.abs(posAttr.array[i * 3]) > 300) velocities[i].x *= -1;
+          if (Math.abs(posAttr.array[i * 3 + 1]) > 300) velocities[i].y *= -1;
+          if (Math.abs(posAttr.array[i * 3 + 2]) > 200) velocities[i].z *= -1;
+
+          // Compute synaptic links
+          for (let j = i + 1; j < particleCount; j++) {
+            const dx = posAttr.array[i * 3] - posAttr.array[j * 3];
+            const dy = posAttr.array[i * 3 + 1] - posAttr.array[j * 3 + 1];
+            const dz = posAttr.array[i * 3 + 2] - posAttr.array[j * 3 + 2];
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+            if (dist < 60) {
+              linePos[lineIdx++] = posAttr.array[i * 3];
+              linePos[lineIdx++] = posAttr.array[i * 3 + 1];
+              linePos[lineIdx++] = posAttr.array[i * 3 + 2];
+              linePos[lineIdx++] = posAttr.array[j * 3];
+              linePos[lineIdx++] = posAttr.array[j * 3 + 1];
+              linePos[lineIdx++] = posAttr.array[j * 3 + 2];
+            }
+          }
+        }
+
+        posAttr.needsUpdate = true;
+        lineGeometry.setDrawRange(0, lineIdx / 3);
+        lineGeometry.attributes.position.needsUpdate = true;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      const galaxyToggle = document.getElementById('galaxyToggle');
+      const galaxyStatus = document.getElementById('galaxyStatus');
+      const speeds = [1.0, 2.5, 0.2];
+      const labels = ["Active", "Hyper", "Zen"];
+      let speedIdx = 0;
+
+      if (galaxyToggle) {
+        galaxyToggle.addEventListener('click', () => {
+          speedIdx = (speedIdx + 1) % speeds.length;
+          speedFactor = speeds[speedIdx];
+          galaxyStatus.textContent = labels[speedIdx];
+          playSound('click');
+        });
+      }
+    })();
+
+    // ==========================================
+    // 5. HERO INTERACTIVE 3D NEURAL CORE
+    // ==========================================
+    (function initHero3D() {
+      const canvas = document.getElementById('hero-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.z = 4.2;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Dynamic Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0x6366f1, 3.0);
+      dirLight1.position.set(5, 5, 5);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0x06b6d4, 2.5);
+      dirLight2.position.set(-5, -5, -2);
+      scene.add(dirLight2);
+
+      const geometries = [
+        { name: "Torus Knot", geom: new THREE.TorusKnotGeometry(1.15, 0.38, 128, 16) },
+        { name: "Icosahedron", geom: new THREE.IcosahedronGeometry(1.6, 2) },
+        { name: "Cyber Sphere", geom: new THREE.SphereGeometry(1.5, 32, 32) },
+        { name: "Quantum Octa", geom: new THREE.OctahedronGeometry(1.6, 2) }
+      ];
+      let geomIndex = 0;
+
+      const wireMaterial = new THREE.MeshStandardMaterial({
+        color: 0x6366f1,
+        wireframe: true,
+        roughness: 0.2,
+        metalness: 0.9,
+        emissive: 0x1e1b4b,
+        emissiveIntensity: 0.5
+      });
+
+      const chromeMaterial = new THREE.MeshStandardMaterial({
+        color: 0x06b6d4,
+        roughness: 0.1,
+        metalness: 0.95,
+        emissive: 0x083344,
+        emissiveIntensity: 0.4
+      });
+
+      const styles = [
+        { name: "Hologram", mat: wireMaterial },
+        { name: "Chrome", mat: chromeMaterial }
+      ];
+      let styleIndex = 0;
+
+      let mainMesh = new THREE.Mesh(geometries[0].geom, styles[0].mat);
+      scene.add(mainMesh);
+
+      // Outer Pulsing Cloud
+      const haloGeom = new THREE.IcosahedronGeometry(1.95, 2);
+      const haloMat = new THREE.PointsMaterial({
+        color: 0x06b6d4,
+        size: 0.055,
+        transparent: true,
+        opacity: 0.75,
+        blending: THREE.AdditiveBlending
+      });
+      const haloMesh = new THREE.Points(haloGeom, haloMat);
+      scene.add(haloMesh);
+
+      // Drag Orbit Interactivity
+      let isDragging = false;
+      let prevMousePos = { x: 0, y: 0 };
+      let dragVelocity = { x: 0, y: 0 };
+
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        prevMousePos = { x: e.clientX, y: e.clientY };
+      });
+      window.addEventListener('mouseup', () => { isDragging = false; });
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - prevMousePos.x;
+        const deltaY = e.clientY - prevMousePos.y;
+        dragVelocity.x = deltaX * 0.01;
+        dragVelocity.y = deltaY * 0.01;
+        mainMesh.rotation.y += dragVelocity.x;
+        mainMesh.rotation.x += dragVelocity.y;
+        haloMesh.rotation.y += dragVelocity.x;
+        haloMesh.rotation.x += dragVelocity.y;
+        prevMousePos = { x: e.clientX, y: e.clientY };
+      });
+
+      // Touch events for mobile
+      canvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      });
+      window.addEventListener('touchend', () => { isDragging = false; });
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        const deltaX = e.touches[0].clientX - prevMousePos.x;
+        const deltaY = e.touches[0].clientY - prevMousePos.y;
+        mainMesh.rotation.y += deltaX * 0.01;
+        mainMesh.rotation.x += deltaY * 0.01;
+        haloMesh.rotation.y += deltaX * 0.01;
+        haloMesh.rotation.x += deltaY * 0.01;
+        prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      });
+
+      // Switch Geometry
+      const switchShapeBtn = document.getElementById('switchShapeBtn');
+      const shapeLabel = document.getElementById('currentShapeName');
+      if (switchShapeBtn) {
+        switchShapeBtn.addEventListener('click', () => {
+          geomIndex = (geomIndex + 1) % geometries.length;
+          scene.remove(mainMesh);
+          mainMesh.geometry.dispose();
+          mainMesh = new THREE.Mesh(geometries[geomIndex].geom, styles[styleIndex].mat);
+          scene.add(mainMesh);
+          shapeLabel.textContent = geometries[geomIndex].name;
+          playSound('click');
+        });
+      }
+
+      // Switch Style
+      const switchStyleBtn = document.getElementById('switchStyleBtn');
+      const styleLabel = document.getElementById('currentStyleName');
+      if (switchStyleBtn) {
+        switchStyleBtn.addEventListener('click', () => {
+          styleIndex = (styleIndex + 1) % styles.length;
+          mainMesh.material = styles[styleIndex].mat;
+          styleLabel.textContent = styles[styleIndex].name;
+          playSound('click');
+        });
+      }
+
+      function animateHero() {
+        requestAnimationFrame(animateHero);
+        if (!isDragging) {
+          mainMesh.rotation.x += 0.005;
+          mainMesh.rotation.y += 0.008;
+          haloMesh.rotation.x -= 0.002;
+          haloMesh.rotation.y -= 0.004;
+        }
+        renderer.render(scene, camera);
+      }
+      animateHero();
+
+      window.addEventListener('resize', () => {
+        if (!canvas) return;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+      });
+    })();
+
+    // ==========================================
+    // 6. LIVE AI AGENT & PIPELINE SIMULATOR
+    // ==========================================
+    const scenarioConfigs = {
+      zepto: {
+        typeBadge: "LangGraph Multi-Node Workflow",
+        prompt: '"Can I return perishable dairy milk 45 minutes after delivery if the seal is intact?"',
+        nodes: [
+          { title: "Query Intent Classifier", desc: "Category: Fresh Perishable (§4.2)" },
+          { title: "ChromaDB Embedding Match", desc: "Top chunk: all-MiniLM-L6-v2 (0.91 sim)" },
+          { title: "Strict Policy Guardrail", desc: "Rule: Zero Return on Dairy > 10m" },
+          { title: "Response Synthesizer", desc: "Return request denied with polite reason" }
+        ],
+        latency: "142 ms",
+        confidence: "98.4%",
+        streamText: `[LangGraph Engine] Initialized StateGraph with 3 active routing nodes...
+▶ NODE 1 (Intent Classifier): Classifying intent... [Category: RETURN_REFUND, SubCategory: PERISHABLE_DAIRY]
+▶ NODE 2 (ChromaDB Retriever): Embedding query via all-MiniLM-L6-v2...
+  ✓ Chunk Retrieved [id=policy_return_v4.txt]: "Perishable items including dairy, fruits, and meat must be reported within 10 minutes of delivery. Unopened dairy cannot be returned after 10m due to cold-chain preservation regulations."
+▶ NODE 3 (Guardrail Verifier): Verifying delivery elapsed time (45 mins > 10 mins threshold)...
+  ✓ Status: DETERMINISTIC_REJECTION_TRIGGERED. Zero hallucinations permitted.
+▶ NODE 4 (Output Synthesizer):
+"We are unable to accept returns on dairy items 45 minutes after delivery. Per Zepto Fresh Food Safety Regulations (§4.2), dairy and perishable items must be inspected within 10 minutes to maintain cold-chain integrity. If the item was received damaged or expired upon handover, please submit an image via the Zepto app for an instant refund credit."`
+      },
+      dinov2: {
+        typeBadge: "Meta DINOv2 ViT Semantic Segmentation",
+        prompt: '"Extract 14x14 patch tokens from off-road vehicle camera feed frame #1049"',
+        nodes: [
+          { title: "Image Preprocessing", desc: "Resize 518x518, Norm ImageNet" },
+          { title: "DINOv2 ViT-S/14 Backbone", desc: "Extract 384-dim patch embeddings" },
+          { title: "Linear Decoder Head", desc: "10-Class semantic logits mapping" },
+          { title: "mIoU Evaluation Mask", desc: "Mean IoU: 86.4% across 10 classes" }
+        ],
+        latency: "31 ms (32 FPS)",
+        confidence: "94.2%",
+        streamText: `[PyTorch DINOv2 Pipeline] Forward pass triggered on batch size 1 (1x3x518x518)...
+▶ STEP 1: Transforming camera frame... Tensor shape torch.Size([1, 3, 518, 518]).
+▶ STEP 2: Running Meta DINOv2 ViT-S/14 self-supervised backbone...
+  ✓ Patch Grid: 37 x 37 tokens = 1369 patch vectors @ 384 dimensions each.
+  ✓ Self-attention heads captured fine-grained spatial contrast between loose gravel and dry mud.
+▶ STEP 3: Linear segmentation head projection...
+  ✓ Logits shape torch.Size([1, 10, 518, 518]) mapped to classes: [Obstacle, Trail, Rough Terrain, Vegetation, Mud, Sky...]
+▶ STEP 4: Evaluation & Telemetry:
+  ✓ Mean IoU: 86.4% | Inference Latency: 31.2ms (Real-time autonomous vehicle threshold satisfied: >30 FPS).`
+      },
+      socratic: {
+        typeBadge: "Socratic Guardrail & Hint Escalation",
+        prompt: '"Just give me the exact python code for finding prime numbers in a list."',
+        nodes: [
+          { title: "Layer 1 Regex Guardrail", desc: "Direct answer request intercepted" },
+          { title: "Layer 2 LLM Verifier", desc: "Confirm pedagogical compliance" },
+          { title: "Struggle Tracker (SQLite)", desc: "Student at Hint Level 2/5" },
+          { title: "Socratic Question Generator", desc: "Prompt student with prime definition" }
+        ],
+        latency: "89 ms",
+        confidence: "99.8%",
+        streamText: `[Socratic Guardrail Engine] Processing user submission...
+▶ LAYER 1 (Deterministic Regex Check): Scanned for phrases like "give me the code", "solve it for me"...
+  ⚠️ ALERT: Direct solution leak request flagged! Blocked direct code emission.
+▶ LAYER 2 (LLM Compliance Verifier): Confirmed student is asking for homework completion.
+▶ LAYER 3 (Stateful Escalation Tracker): Session ID #usr_4892. Stored struggle count: 2.
+  ✓ Escalating from Hint Level 1 (Conceptual) to Hint Level 2 (Structural Guidance).
+▶ LAYER 4 (Socratic Response):
+"I won't write out the full code, but let's break it down together! What mathematically defines a prime number when dividing by numbers between 2 and sqrt(n)? How might you use the modulo operator (%) inside a loop to check if any number divides evenly?"`
+      },
+      retinopathy: {
+        typeBadge: "Medical XAI & Grad-CAM Pipeline",
+        prompt: '"Analyze fundus photograph #MED-774 for Diabetic Retinopathy severity grading"',
+        nodes: [
+          { title: "CLAHE Preprocessor", desc: "Contrast-limited adaptive hist eq" },
+          { title: "PyTorch CNN Classifier", desc: "5-class ICDR disease grading" },
+          { title: "Grad-CAM Heatmap Gen", desc: "Backprop to final conv layer" },
+          { title: "Clinician Audit Report", desc: "Grade 3: Severe NPDR (Calibrated)" }
+        ],
+        latency: "165 ms",
+        confidence: "91.8%",
+        streamText: `[Medical XAI Diagnostic Engine] Ingesting 2048x2048 fundus photograph...
+▶ PREPROCESSING: CLAHE illumination equalization applied; centered macular focus.
+▶ INFERENCE: PyTorch ResNet-based clinical model forward pass:
+  ✓ Predicted Class: Grade 3 (Severe Non-Proliferative Diabetic Retinopathy - NPDR).
+  ✓ Post-Temperature Calibrated Probability: 91.8% (Expected Calibration Error: 3.2%).
+▶ EXPLAINABILITY (Grad-CAM):
+  ✓ Computed gradient activations on Conv layer 5.
+  ✓ Attention hotspot centered around microaneurysms and cotton wool exudates in nasal quadrant.
+▶ CLINICIAN CONSOLE:
+  ✓ Prediction queued for ophthalmologist sign-off. SimPy simulated queue time: 4.2 minutes SLA.`
+      }
+    };
+
+    let currentScenarioKey = 'zepto';
+
+    const scenarioButtons = document.querySelectorAll('.scenario-btn');
+    const promptTextEl = document.getElementById('sandboxPromptText');
+    const typeBadgeEl = document.getElementById('scenarioTypeBadge');
+    const outputStreamEl = document.getElementById('sandboxOutputStream');
+    const latencyEl = document.getElementById('telemetryLatency');
+    const confidenceEl = document.getElementById('telemetryConfidence');
+    const runPipelineBtn = document.getElementById('runPipelineBtn');
+    const streamStatusEl = document.getElementById('streamStatus');
+
+    function loadScenario(key) {
+      currentScenarioKey = key;
+      const config = scenarioConfigs[key];
+      if (!config) return;
+
+      promptTextEl.textContent = config.prompt;
+      typeBadgeEl.textContent = config.typeBadge;
+
+      // Update node titles
+      for (let i = 1; i <= 4; i++) {
+        const node = config.nodes[i - 1];
+        const titleEl = document.getElementById(`node-${i}-title`);
+        const descEl = document.getElementById(`node-${i}-desc`);
+        if (titleEl) titleEl.textContent = node.title;
+        if (descEl) descEl.textContent = node.desc;
+        const nodeCard = document.getElementById(`node-${i}`);
+        if (nodeCard) {
+          nodeCard.classList.remove('active-node', 'completed-node');
+        }
+      }
+
+      latencyEl.textContent = "0 ms";
+      confidenceEl.textContent = "0%";
+      outputStreamEl.textContent = 'Click "Execute Pipeline" to run the simulated state traversal.';
+      streamStatusEl.textContent = "READY";
+    }
+
+    scenarioButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        scenarioButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadScenario(btn.getAttribute('data-scenario'));
+        playSound('click');
+      });
+    });
+
+    if (runPipelineBtn) {
+      runPipelineBtn.addEventListener('click', () => {
+        const config = scenarioConfigs[currentScenarioKey];
+        if (!config) return;
+
+        playSound('click');
+        streamStatusEl.textContent = "RUNNING...";
+        outputStreamEl.textContent = "";
+
+        let nodeIndex = 1;
+        const interval = setInterval(() => {
+          if (nodeIndex <= 4) {
+            playSound('tick');
+            const prevNode = document.getElementById(`node-${nodeIndex - 1}`);
+            if (prevNode) {
+              prevNode.classList.remove('active-node');
+              prevNode.classList.add('completed-node');
+            }
+            const currNode = document.getElementById(`node-${nodeIndex}`);
+            if (currNode) currNode.classList.add('active-node');
+            nodeIndex++;
+          } else {
+            clearInterval(interval);
+            const lastNode = document.getElementById(`node-4`);
+            if (lastNode) {
+              lastNode.classList.remove('active-node');
+              lastNode.classList.add('completed-node');
+            }
+
+            // Stream text with typewriter effect
+            latencyEl.textContent = config.latency;
+            confidenceEl.textContent = config.confidence;
+            streamStatusEl.textContent = "COMPLETED";
+            playSound('success');
+
+            let charIdx = 0;
+            const fullText = config.streamText;
+            function typeOut() {
+              if (charIdx < fullText.length) {
+                outputStreamEl.textContent += fullText.charAt(charIdx);
+                charIdx += 3; // Fast stream
+                outputStreamEl.scrollTop = outputStreamEl.scrollHeight;
+                setTimeout(typeOut, 15);
+              }
+            }
+            typeOut();
+          }
+        }, 320);
+      });
+    }
+
+    // ==========================================
+    // 7. 3D PHYSICS TILT & SPECULAR GLARE FOR CARDS
+    // ==========================================
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(card => {
+      const glare = card.querySelector('.card-glare');
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+
+        if (glare) {
+          glare.style.background = `radial-gradient(circle 320px at ${x}px ${y}px, rgba(255, 255, 255, 0.16), transparent 75%)`;
+        }
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        card.style.transition = 'transform 0.45s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease, box-shadow 0.3s ease';
+      });
+
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
+      });
+    });
+
+    // Project Category Filtering
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        playSound('click');
+
+        const filter = btn.getAttribute('data-filter');
+        projectCards.forEach(card => {
+          if (filter === 'all') {
+            card.style.display = 'flex';
+          } else {
+            const categories = card.getAttribute('data-category').split(' ');
+            card.style.display = categories.includes(filter) ? 'flex' : 'none';
+          }
+        });
+      });
+    });
+
+    // ==========================================
+    // 8. ARCHITECTURE INSPECT MODAL SYSTEM
+    // ==========================================
+    const archData = {
+      pathways: {
+        title: "Pathways 3D — Spatial AI Architecture",
+        flow: "[Curriculum Parser] ➔ [OpenAI Synthesizer] ➔ [Three.js 3D Viewport] ➔ [Web Speech Engine] ➔ [Adaptive Confetti Quiz]",
+        details: `
+          <h4>Architectural Pillars:</h4>
+          <p>• <strong>Next.js 15 App Router:</strong> Server-side rendering paired with client-side WebGL Three.js canvas layer.</p>
+          <p>• <strong>Vercel AI SDK Integration:</strong> Streams multi-phase lesson breakdowns and interactive code challenges.</p>
+          <p>• <strong>Hardware Acceleration:</strong> Uses custom WebGL point shaders and requestAnimationFrame physics loops.</p>
+          <div style="margin-top: 14px;"><a href="https://pathways-3d-learning.onrender.com" target="_blank" rel="noopener" class="link-btn primary" style="display: inline-flex;">🚀 Launch Live App: pathways-3d-learning.onrender.com</a></div>
+        `,
+        codeSnippet: `// Three.js Inertia Camera Lerp
+function onWindowScroll() {
+  const targetCamY = -(window.scrollY * 0.05);
+  camera.position.y += (targetCamY - camera.position.y) * 0.08;
+  camera.lookAt(scene.position);
+}`
+      },
+      zepto: {
+        title: "Zepto RAG — LangGraph 3-Node Architecture",
+        flow: "[User Query] ➔ [Intent Classification Node] ➔ [ChromaDB Vector Retrieval] ➔ [Guardrail Filter] ➔ [FastAPI Container]",
+        details: `
+          <h4>Architectural Decisions:</h4>
+          <p>• <strong>LangGraph State Graph:</strong> Deterministic routing between policy document search vs chit-chat fallbacks.</p>
+          <p>• <strong>Zero Cost Local Embeddings:</strong> ChromaDB embedded with sentence-transformers <code>all-MiniLM-L6-v2</code>.</p>
+          <p>• <strong>Docker Packaging:</strong> Fully self-contained image on port 7860 with health checks and volume persistence.</p>
+        `,
+        codeSnippet: `class AgentState(TypedDict):
+    messages: list[BaseMessage]
+    intent: str
+    context: str
+
+workflow = StateGraph(AgentState)
+workflow.add_node("classify", classify_intent_node)
+workflow.add_node("retrieve", chroma_retrieval_node)
+workflow.add_edge("classify", "retrieve")`
+      },
+      dinov2: {
+        title: "Off-Road DINOv2 — Vision Transformer Pipeline",
+        flow: "[Camera Frame (518x518)] ➔ [DINOv2 ViT-S/14 Backbone] ➔ [1369 Patch Tokens (384-d)] ➔ [Linear Segmentation Head] ➔ [10-Class Mask]",
+        details: `
+          <h4>Foundation Model Fine-Tuning:</h4>
+          <p>• <strong>Self-Supervised Backbone:</strong> Meta DINOv2 learns structural image representations without manual bounding boxes.</p>
+          <p>• <strong>Mean IoU Metric:</strong> Achieved 86.4% on complex terrain textures (rough mud, sand, tree roots, puddles).</p>
+        `,
+        codeSnippet: `backbone = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
+with torch.no_grad():
+    features = backbone.forward_features(images)["x_norm_patchtokens"]
+# features: [B, 1369, 384]`
+      },
+      socratic: {
+        title: "AI Socratic Tutor — Guardrail Architecture",
+        flow: "[Student Submission] ➔ [Layer 1 Regex Leak Guardrail] ➔ [Layer 2 Isolated LLM Verifier] ➔ [SQLite State Tracker] ➔ [5-Level Hint Escalator]",
+        details: `
+          <h4>Zero-Dependency Engineering:</h4>
+          <p>• Built strictly with Python standard library (http.server, sqlite3, re, unittest).</p>
+          <p>• Guaranteed zero-leak compliance via two-layer deterministic interception.</p>
+        `,
+        codeSnippet: `def guardrail_check(user_query: str) -> bool:
+    leak_patterns = [r"give me the answer", r"full code", r"solve this"]
+    return any(re.search(p, user_query, re.I) for p in leak_patterns)`
+      },
+      bulletin: {
+        title: "Smart Bulletin Board — Gemini AI & Firebase",
+        flow: "[Notice Upload] ➔ [Flask REST API] ➔ [Google Gemini Taxonomy Extractor] ➔ [Firestore Real-Time Sync] ➔ [Student PWA]",
+        details: `
+          <h4>TechSprint Hackathon Implementation:</h4>
+          <p>• Extracts event dates, urgency tags, and targeted academic departments using Gemini API.</p>
+          <p>• Instant real-time distribution across all campus subscribers via Firestore WebSocket listeners.</p>
+        `
+      },
+      retinopathy: {
+        title: "Explainable Retinopathy — PyTorch & Grad-CAM",
+        flow: "[Fundus Scan] ➔ [CLAHE Equalization] ➔ [PyTorch CNN] ➔ [Grad-CAM Backprop] ➔ [SimPy Hospital Queuing Sim]",
+        details: `
+          <h4>Clinical Safety & Interpretability:</h4>
+          <p>• Visualizes attention gradient heatmaps over optic disc and microaneurysms.</p>
+          <p>• Simulated hospital ophthalmologist review capacity using SimPy discrete-event queue modeling.</p>
+        `
+      }
+    };
+
+    const archModalOverlay = document.getElementById('archModalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+
+    window.openArchModal = function(projectId) {
+      const data = archData[projectId];
+      if (!data) return;
+
+      modalTitle.textContent = data.title;
+      modalBody.innerHTML = `
+        <div class="modal-arch-flow">FLOW: ${data.flow}</div>
+        <div>${data.details}</div>
+        ${data.codeSnippet ? `<div class="modal-code-box"><pre><code>${data.codeSnippet}</code></pre></div>` : ''}
+      `;
+      archModalOverlay.classList.add('open');
+      playSound('click');
+    };
+
+    window.closeArchModal = function() {
+      archModalOverlay.classList.remove('open');
+      playSound('click');
+    };
+
+    if (archModalOverlay) {
+      archModalOverlay.addEventListener('click', (e) => {
+        if (e.target === archModalOverlay) closeArchModal();
+      });
+    }
+
+    // ==========================================
+    // 9. COMMAND PALETTE (CTRL + K / CMD + K)
+    // ==========================================
+    const cmdOverlay = document.getElementById('cmdOverlay');
+    const cmdInput = document.getElementById('cmdInput');
+    const openCmdBtn = document.getElementById('openCmdBtn');
+    const cmdItems = document.querySelectorAll('.cmd-item');
+
+    function toggleCommandPalette() {
+      const isOpen = cmdOverlay.classList.contains('open');
+      if (isOpen) {
+        cmdOverlay.classList.remove('open');
+      } else {
+        cmdOverlay.classList.add('open');
+        cmdInput.value = '';
+        cmdInput.focus();
+        playSound('click');
+      }
+    }
+
+    if (openCmdBtn) openCmdBtn.addEventListener('click', toggleCommandPalette);
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+      if (e.key === 'Escape') {
+        if (cmdOverlay.classList.contains('open')) cmdOverlay.classList.remove('open');
+        if (archModalOverlay.classList.contains('open')) closeArchModal();
+      }
+    });
+
+    if (cmdOverlay) {
+      cmdOverlay.addEventListener('click', (e) => {
+        if (e.target === cmdOverlay) cmdOverlay.classList.remove('open');
+      });
+    }
+
+    cmdItems.forEach(item => {
+      item.addEventListener('click', () => {
+        cmdOverlay.classList.remove('open');
+        const action = item.getAttribute('data-action');
+        if (action === 'goto') {
+          const target = document.querySelector(item.getAttribute('data-target'));
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        } else if (action === 'open-url') {
+          window.location.href = item.getAttribute('data-url');
+        } else if (action === 'copy-email') {
+          copyEmailToClipboard();
+        } else if (action === 'toggle-theme') {
+          themeToggle.click();
+        }
+      });
+    });
+
+    // ==========================================
+    // 10. THEME TOGGLE (DARK / LIGHT)
+    // ==========================================
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const root = document.documentElement;
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+      root.setAttribute('data-theme', 'light');
+      themeIcon.textContent = '🌙';
+    } else {
+      root.removeAttribute('data-theme');
+      themeIcon.textContent = '☀️';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      playSound('click');
+      const isLight = root.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        root.removeAttribute('data-theme');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+        showToast('Dark Mode Activated 🌌');
+      } else {
+        root.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+        showToast('Light Mode Activated ☀️');
+      }
+    });
+  </script>
+</body>
+</html>

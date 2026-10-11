@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podila Ugender — AI & ML Engineer Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --secondary: #334155;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --tag-bg: #f1f5f9;
+      --tag-border: #cbd5e1;
+      --line: #e2e8f0;
+      --bg: #ffffff;
+      --callout-bg: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #e2e8f0;
+      color: var(--primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.42;
+      font-size: 12.8px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Action Bar (hidden in print) */
+    .action-bar {
+      max-width: 850px;
+      margin: 20px auto 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+    }
+    .action-bar .info {
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-bar .badge {
+      background: #10b981;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #cbd5e1;
+      border-color: #334155;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    /* Resume Sheet */
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: #fff;
+      margin: 0 auto 30px;
+      padding: 13mm 15mm 13mm 15mm;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 9px;
+      margin-bottom: 10px;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    h1.name {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+    .title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 1px;
+      letter-spacing: 0.2px;
+    }
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px 13px;
+      margin-top: 6px;
+      font-size: 11.8px;
+      color: var(--secondary);
+    }
+    .contact-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .contact-item a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .contact-item a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .sep {
+      color: #cbd5e1;
+    }
+
+    /* Section Styling */
+    section {
+      margin-bottom: 9px;
+    }
+    .section-title {
+      font-size: 11.2px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 2px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Professional Summary */
+    .summary-text {
+      font-size: 12px;
+      color: var(--secondary);
+      text-align: justify;
+      line-height: 1.42;
+    }
+    .summary-text strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3px;
+      font-size: 11.8px;
+    }
+    .skill-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.38;
+    }
+    .skill-label {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 130px;
+      font-size: 11.6px;
+    }
+    .skill-list {
+      color: var(--secondary);
+      flex: 1;
+    }
+
+    /* Items (Experience & Projects) */
+    .item {
+      margin-bottom: 6.5px;
+    }
+    .item:last-child {
+      margin-bottom: 0;
+    }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 12.2px;
+    }
+    .role-org {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .role-org span {
+      font-weight: 500;
+      color: var(--secondary);
+    }
+    .item-date-loc {
+      font-size: 11.2px;
+      color: var(--muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .project-title {
+      font-size: 12.2px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .project-links {
+      font-size: 11.2px;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+    .project-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .project-links a:hover {
+      text-decoration: underline;
+    }
+    .project-tech {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--accent-dark);
+      font-weight: 500;
+      margin-top: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    /* Bullet Points */
+    ul.bullets {
+      list-style-type: none;
+      margin-top: 2px;
+      padding-left: 0;
+    }
+    ul.bullets li {
+      position: relative;
+      padding-left: 13px;
+      margin-bottom: 2px;
+      font-size: 11.8px;
+      color: var(--secondary);
+      line-height: 1.38;
+    }
+    ul.bullets li::before {
+      content: "▪";
+      position: absolute;
+      left: 1px;
+      top: -1px;
+      color: var(--accent);
+      font-size: 12px;
+    }
+    ul.bullets li strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Education & Certs Layout (2 columns) */
+    .bottom-cols {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 16px;
+    }
+    .edu-degree {
+      font-size: 12.2px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .edu-inst {
+      font-size: 11.8px;
+      color: var(--secondary);
+      font-weight: 500;
+    }
+    .edu-details {
+      font-size: 11.2px;
+      color: var(--muted);
+      margin-top: 1px;
+      line-height: 1.32;
+    }
+    .cert-item {
+      font-size: 11.2px;
+      color: var(--secondary);
+      margin-bottom: 2px;
+      line-height: 1.32;
+      position: relative;
+      padding-left: 11px;
+    }
+    .cert-item::before {
+      content: "•";
+      position: absolute;
+      left: 1px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Print Optimization */
+    @media print {
+      body {
+        background: #fff;
+        margin: 0;
+        padding: 0;
+      }
+      .action-bar {
+        display: none !important;
+      }
+      .sheet {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 7mm 9mm 5mm 9mm;
+        box-shadow: none;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 5mm 7mm;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .project-links a, .contact-item a {
+        color: var(--accent) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen Top Bar with Quick Actions -->
+  <div class="action-bar">
+    <div class="info">
+      <span class="badge">ATS-Optimized</span>
+      <span><strong>Podila Ugender</strong> — 1-Page High-Impact Engineering Resume (Updated with LinkedIn &amp; GitHub)</span>
+    </div>
+    <div class="action-buttons">
+      <button class="btn btn-primary" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+        Print / Save to PDF
+      </button>
+      <a class="btn btn-secondary" href="Podila Ugender — AI & ML Engineer Portfolio.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Open Portfolio
+      </a>
+    </div>
+  </div>
+
+  <!-- Printable Resume Sheet -->
+  <main class="sheet">
+    <header>
+      <div class="header-top">
+        <div>
+          <h1 class="name">Podila Ugender</h1>
+          <div class="title">AI & Machine Learning Engineer | GenAI & Agentic Systems Developer</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <span class="contact-item">
+          📍 Hyderabad, India
+        </span>
+        <span class="sep">•</span>
+        <span class="contact-item">
+          📞 <a href="tel:+917330700197">+91 73307 00197</a>
+        </span>
+        <span class="sep">•</span>
+        <span class="contact-item">
+          ✉️ <a href="mailto:ugendharpodila9@gmail.com">ugendharpodila9@gmail.com</a>
+        </span>
+        <span class="sep">•</span>
+        <span class="contact-item">
+          🔗 <a href="https://linkedin.com/in/ugender9" target="_blank" rel="noopener">linkedin.com/in/ugender9</a>
+        </span>
+        <span class="sep">•</span>
+        <span class="contact-item">
+          🐙 <a href="https://github.com/ugender9" target="_blank" rel="noopener">github.com/ugender9</a>
+        </span>
+        <span class="sep">•</span>
+        <span class="contact-item">
+          🌐 <a href="https://pathways-3d-learning.onrender.com" target="_blank" rel="noopener">Live Showcase</a>
+        </span>
+      </div>
+    </header>
+
+    <!-- Professional Summary -->
+    <section>
+      <div class="section-title">Professional Summary</div>
+      <p class="summary-text">
+        AI & Machine Learning undergraduate (B.Tech, 2027) with <strong>3 completed engineering internships</strong> and <strong>6+ production-grade AI repositories</strong>. Certified across <strong>Microsoft Azure AI</strong>, <strong>Google</strong>, <strong>IBM</strong>, and <strong>Deloitte</strong>. Specialized in <strong>Agentic AI workflows</strong>, <strong>LangGraph/LangChain orchestration</strong>, <strong>RAG architectures</strong>, and <strong>Vision Transformers (DINOv2)</strong>. Experienced in designing end-to-end intelligent pipelines—from data ingestion and model training to robust FastAPI microservices, Docker containerization, and interactive WebGL deployments.
+      </p>
+    </section>
+
+    <!-- Core Skills -->
+    <section>
+      <div class="section-title">Core Technical Skills</div>
+      <div class="skills-grid">
+        <div class="skill-row">
+          <div class="skill-label">Languages & Data:</div>
+          <div class="skill-list">Python, TypeScript, JavaScript, SQL, Pandas, NumPy, Matplotlib, Beautiful Soup</div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-label">GenAI & Agentic AI:</div>
+          <div class="skill-list">LangGraph, LangChain, RAG, ChromaDB, Sentence-Transformers, OpenAI API, Gemini API, IBM watsonx.ai, Guardrails</div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-label">Machine Learning & CV:</div>
+          <div class="skill-list">PyTorch, Meta DINOv2 (ViT), OpenCV, scikit-learn, XGBoost, Random Forest, CNNs, Grad-CAM, NLTK, SMOTE</div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-label">Full-Stack & Cloud:</div>
+          <div class="skill-list">FastAPI, Next.js 15, React, Three.js (WebGL), Flask, SQLite, Firebase, Docker, GitHub CI/CD, Azure AI, Render</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Professional Experience -->
+    <section>
+      <div class="section-title">Professional Experience</div>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="role-org">AI/ML Intern <span>| Innomatics Research Labs</span></div>
+          <div class="item-date-loc">Feb 2026 – May 2026 | Hyderabad, India</div>
+        </div>
+        <ul class="bullets">
+          <li>Architected and deployed agentic AI workflows with <strong>LangChain</strong> and <strong>OpenAI APIs</strong>, establishing autonomous pipelines with multi-step tool use, conversation memory, and structured Pydantic outputs.</li>
+          <li>Engineered machine learning pipelines and integrated <strong>Microsoft Azure AI services</strong> on real-world client data projects.</li>
+          <li>Authored <strong>10+ technical deep-dive guides</strong> covering Python, NLP, and GenAI architectures to scale team knowledge.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="role-org">Python & ML Intern <span>| Slash Mark</span></div>
+          <div class="item-date-loc">Oct 2024 – Nov 2024 | Remote</div>
+        </div>
+        <ul class="bullets">
+          <li>Developed an intelligent plagiarism detection system using Cosine Similarity and Jaccard Index, achieving <strong>92% accuracy</strong>.</li>
+          <li>Engineered NLTK text processing pipelines and refactored core data structures, cutting corpus execution time by <strong>35%</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="role-org">Machine Learning Intern <span>| GWING Software Technologies</span></div>
+          <div class="item-date-loc">Sep 2024 – Oct 2024 | Hyderabad, India</div>
+        </div>
+        <ul class="bullets">
+          <li>Built a predictive diabetes screening model in Python, achieving <strong>88% accuracy</strong> on 768 patient clinical records.</li>
+          <li>Benchmarked Logistic Regression, Decision Trees, Random Forests, and SVMs with cross-validation to select the best model.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Key Projects (Selected from GitHub Profile) -->
+    <section>
+      <div class="section-title">Featured Projects (github.com/ugender9)</div>
+
+      <div class="item">
+        <div class="item-header">
+          <div>
+            <span class="project-title">Pathways 3D (Topicwave) — YouTube Spatial AI Academy</span>
+            <span class="project-links">
+              [<a href="https://pathways-3d-learning.onrender.com" target="_blank" rel="noopener">Live Demo</a>]
+              [<a href="https://github.com/ugender9/pathways-3d-learning" target="_blank" rel="noopener">GitHub</a>]
+            </span>
+          </div>
+          <div class="item-date-loc">Next.js 15, Three.js, OpenAI API, Vercel AI SDK, Render</div>
+        </div>
+        <ul class="bullets">
+          <li>Engineered an interactive 3D WebGL platform converting <strong>200+ YouTube tutorials into structured 3-phase masterclasses</strong> with real-time 350-particle Three.js galaxy physics and mouse-inertia tilt cards.</li>
+          <li>Integrated OpenAI via Vercel AI SDK to extract technical takeaways, generate smart notes, and run 10-question adaptive quizzes with Web Speech audio narration; automated CI/CD deployment on Render.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div>
+            <span class="project-title">Zepto Support Assistant — RAG & LangGraph Policy Engine</span>
+            <span class="project-links">
+              [<a href="https://github.com/ugender9/zepto-capstone" target="_blank" rel="noopener">GitHub: zepto-capstone</a>]
+            </span>
+          </div>
+          <div class="item-date-loc">Python, LangGraph, ChromaDB, Sentence-Transformers, FastAPI, Docker</div>
+        </div>
+        <ul class="bullets">
+          <li>Constructed an offline-capable RAG assistant answering user queries strictly grounded in 8 official policy documents.</li>
+          <li>Designed a 3-node <strong>LangGraph</strong> state machine (intent classifier &rarr; retrieve-and-answer / direct fallback) over persistent local <strong>ChromaDB</strong> with <code>all-MiniLM-L6-v2</code> embeddings; containerized in <strong>Docker</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div>
+            <span class="project-title">Off-Road Terrain Semantic Segmentation with DINOv2</span>
+            <span class="project-links">
+              [<a href="https://github.com/ugender9/offroad-segmentation-dinov2" target="_blank" rel="noopener">GitHub: offroad-segmentation-dinov2</a>]
+            </span>
+          </div>
+          <div class="item-date-loc">PyTorch, Meta DINOv2 (ViT-S/14), Vision Transformer, Computer Vision</div>
+        </div>
+        <ul class="bullets">
+          <li>Trained a semantic segmentation pipeline using Meta’s self-supervised <strong>DINOv2 ViT backbone</strong> with a custom segmentation head to parse unpaved off-road driving terrain across <strong>10 distinct navigation classes</strong>, evaluated on Mean IoU.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div>
+            <span class="project-title">AI Socratic Tutor — Zero-Dependency Guardrail Engine</span>
+            <span class="project-links">
+              [<a href="https://github.com/ugender9/ai-socratic-tutor" target="_blank" rel="noopener">GitHub: ai-socratic-tutor</a>]
+            </span>
+          </div>
+          <div class="item-date-loc">Python (Stdlib only), LLM Guardrails, SQLite, Unit Tests</div>
+        </div>
+        <ul class="bullets">
+          <li>Engineered an AI tutor that leads students via progressive questioning; enforced by a two-layer answer-leak guardrail (structural check + isolated LLM compliance verifier) and a 5-level hint-escalation engine in SQLite.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div>
+            <span class="project-title">Smart Campus Bulletin Board — Gemini AI</span>
+            <span class="project-links">
+              [<a href="https://quantumdashboard9.web.app" target="_blank" rel="noopener">Live: quantumdashboard9.web.app</a>]
+              [<a href="https://github.com/ugender9/smart-bulletin-board" target="_blank" rel="noopener">GitHub</a>]
+            </span>
+          </div>
+          <div class="item-date-loc">Google Gemini API, Flask, Firebase Firestore & Hosting, JavaScript</div>
+        </div>
+        <ul class="bullets">
+          <li>Built a real-time notice platform for <strong>TechSprint Hackathon (GDGoC VVIET)</strong> with automated Gemini AI categorization, urgency tagging, and live Firestore updates across student/faculty dashboards.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Education & Certifications (2 Columns) -->
+    <section>
+      <div class="bottom-cols">
+        <div>
+          <div class="section-title">Education</div>
+          <div class="edu-degree">B.Tech – Artificial Intelligence & Machine Learning</div>
+          <div class="edu-inst">SCIENT Institute of Technology, Hyderabad (2023 – 2027)</div>
+          <div class="edu-details">
+            <strong>CGPA: 8.7 / 10.0</strong><br>
+            <em>Coursework:</em> Machine Learning, Deep Learning, NLP, CV, DSA, DBMS, Cloud Computing.<br>
+            Class XII: 87% • Class X: 100% (10.0 GPA)
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Certifications & Credentials</div>
+          <div class="cert-item"><strong>Microsoft Azure AI Essentials</strong> — Microsoft &amp; LinkedIn (Oct 2025)</div>
+          <div class="cert-item"><strong>Google AI Agents Intensive</strong> — Innomatics Research Labs</div>
+          <div class="cert-item"><strong>IBM SkillsBuild</strong> — AI Automation &amp; Intelligent Solutions</div>
+          <div class="cert-item"><strong>Deloitte Australia</strong> — Data Analytics Job Simulation</div>
+          <div class="cert-item"><strong>TechSprint Hackathon 2025–26</strong> — GDGoC VVIET Mysuru</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
